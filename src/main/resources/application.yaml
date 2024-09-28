@@ -1,0 +1,12 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /ptit-exam
+
+spring:
+  application:
+    name=PTIT-Exam
+  datasource:
+    url: "jdbc:mysql://localhost:3306/ptit-exam"
+    username: root
+    password: 089908
