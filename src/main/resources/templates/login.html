@@ -1,14 +1,11 @@
 <!DOCTYPE html>
-<html lang="vn, en" xmlns:th="http://www.thymeleaf.org">
-
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
-
-    <title>PTIT Exam - Đăng nhập</title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" th:href="@{/css/login-style.css}" >
-    <link rel="icon" href="" th:href="@{/image/login/PTIT_LOGO.png}">
+    <title>Đăng Nhập - PTIT Exam</title>
+    <link rel="stylesheet" th:href="@{/css/login-style.css}">
+    <link rel="icon" th:href="@{/image/login/PTIT_LOGO.png}">
 </head>
-
 <body>
 <div class="ptit-logo-container">
     <img th:src="@{/image/login/PTIT_LOGO.png}" alt="PTIT Logo">
@@ -16,7 +13,6 @@
         <h2>HỌC VIỆN CÔNG NGHỆ BƯU CHÍNH VIỄN THÔNG</h2>
         <h3>Posts and Telecommunications Institute of Technology</h3>
     </div>
-
 </div>
 
 <div class="openning-title">
@@ -25,12 +21,17 @@
 
 <div class="login-container">
     <h2>Đăng nhập</h2>
-    <form>
+
+    <div th:if="${error}" style="color: #bb2019;">
+        <p th:text="${error}"></p>
+    </div>
+
+    <form action="#" th:action="@{/login}" method="post" th:object="${user}">
         <label for="username">Tên đăng nhập:</label>
-        <input type="text" id="username" name="username" required>
+        <input type="text" id="username" name="username" required th:field="*{username}">
 
         <label for="password">Mật khẩu:</label>
-        <input type="password" id="password" name="password" required>
+        <input type="password" id="password" name="password" required th:field="*{password}">
 
         <div class="remember-password">
             <input type="checkbox" id="remember-me">
@@ -43,9 +44,7 @@
         <label>Chưa có tài khoản?
             <a href="#" class="sign-up">Đăng ký</a>
         </label>
-
     </form>
 </div>
 </body>
-
 </html>
