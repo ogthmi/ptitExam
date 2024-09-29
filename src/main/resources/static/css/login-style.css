@@ -1,0 +1,119 @@
+html,
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    --red-text: #de2219;
+    --gray-text: #4c4c4c;
+    --box-fill: #bb2019;
+    --input-padding: 7px;
+}
+
+.ptit-logo-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+
+    /* ptit logo */
+    img {
+        object-fit: contain;
+        width: 3rem;
+        margin-right: 15px;
+    }
+
+    /* ptit vn-name */
+    h2 {
+        color: var(--red-text);
+        font-size: 1.3em;
+        margin-top: 3px;
+        margin-bottom: 0;
+    }
+
+    /* ptit en-name */
+    h3 {
+        margin: 0;
+        color: var(--gray-text);
+    }
+}
+
+.openning-title {
+    text-align: center;
+    margin-bottom: 50px;
+
+    h1 {
+        color: var(--gray-text);
+        font-size: 1.75rem;
+    }
+}
+
+
+.login-container {
+    width: 350px;
+    height: auto;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+
+    h2 {
+        color: var(--gray-text);
+        font-size: 20px;
+        margin-top: 0;
+
+    }
+}
+
+.login-container label {
+    font-size: 14px;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.login-container input {
+    width: 100%;
+    padding: var(--input-padding);
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;
+}
+
+.login-container button {
+    margin-top: 0.25em;
+    margin-bottom: 1.25em;
+    width: 100%;
+    padding: var(--input-padding);
+    background-color: var(--box-fill);
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.forgot-password,
+.remember-password,
+.sign-up {
+    font-size: 14px;
+}
+
+.remember-password {
+    display: grid;
+    grid-template-columns: auto auto;
+    place-items: middle;
+    float: left;
+
+    input {
+        margin-left: 0;
+        margin-right: 10px;
+    }
+}
+
+.forgot-password {
+    color: var(--box-fill);
+    float: right;
+}
+
+.sign-up {
+    margin-left: 5px;
+    color: var(--box-fill);
+}
