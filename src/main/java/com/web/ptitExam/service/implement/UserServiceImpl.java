@@ -27,4 +27,9 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUsername(username);
         return user != null && passwordEncoder.matches(password, user.getPassword());
     }
+
+    @Override
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
 }

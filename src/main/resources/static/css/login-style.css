@@ -90,6 +90,16 @@ body {
     cursor: pointer;
 }
 
+.login-container .error-message p{
+    width: 100%;
+    background-color: #FFcac7;
+    border-radius: 3px;
+    color: #bb2019;
+    font-size: 14px;
+    padding: var(--input-padding);
+    box-sizing: border-box;
+
+}
 .forgot-password,
 .remember-password,
 .sign-up {
