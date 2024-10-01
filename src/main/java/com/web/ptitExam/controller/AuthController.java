@@ -40,15 +40,6 @@ public class AuthController {
         }
     }
 
-    @PostMapping(value = "/register")
-    public String registerUser(@ModelAttribute User user, Model model) {
-        try {
-            userService.registerUser(user);
-            return "homepage";
-        } catch (IllegalArgumentException e) {
-            model.addAttribute("error", e.getMessage());
-            return "register";
-        }
-    }
+
 
 }
