@@ -1,8 +1,8 @@
-package com.web.ptitExam.controller;
+package com.web.ptitexam.controller;
 
-import com.web.ptitExam.dto.UserDTO;
-import com.web.ptitExam.entity.User;
-import com.web.ptitExam.service.UserService;
+import com.web.ptitexam.dto.UserDTO;
+import com.web.ptitexam.entity.User;
+import com.web.ptitexam.service.UserService;
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

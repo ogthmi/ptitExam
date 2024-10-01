@@ -1,4 +1,4 @@
-package com.web.ptitExam.dto;
+package com.web.ptitexam.dto;
 
 public class UserDTO {
     private String username;

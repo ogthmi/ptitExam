@@ -1,7 +1,6 @@
-package com.web.ptitExam.service;
+package com.web.ptitexam.service;
 
-import com.web.ptitExam.entity.User;
-import org.springframework.stereotype.Service;
+import com.web.ptitexam.entity.User;
 
 public interface UserService {
    void registerUser (User user);

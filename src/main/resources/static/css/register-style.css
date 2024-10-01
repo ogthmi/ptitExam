@@ -1,0 +1,127 @@
+html,
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    --red-text: #de2219;
+    --gray-text: #4c4c4c;
+    --box-fill: #bb2019;
+    --input-padding: 7px;
+    --indent: 20px
+}
+
+.ptit-logo-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+
+    /* ptit logo */
+    img {
+        object-fit: contain;
+        width: 3rem;
+        margin-right: 15px;
+    }
+
+    /* ptit vn-name */
+    h2 {
+        color: var(--red-text);
+        font-size: 1.3em;
+        margin-top: 3px;
+        margin-bottom: 0;
+    }
+
+    /* ptit en-name */
+    h3 {
+        margin: 0;
+        color: var(--gray-text);
+    }
+}
+
+.openning-title {
+    text-align: center;
+    margin-bottom: 50px;
+
+    h1 {
+        color: var(--gray-text);
+        font-size: 1.75rem;
+    }
+}
+
+.register-container {
+    width: 650px;
+    height: auto;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    h2 {
+        color: var(--gray-text);
+        font-size: 20px;
+        margin-top: 0;
+
+    }
+
+    h3 {
+        color: var(--gray-text);
+        font-size: 16px;
+        margin-top: 0;
+    }
+}
+
+.register-container label {
+    font-size: 14px;
+    display: flex;
+    margin-bottom: 5px;
+}
+
+.register-container input[type = "text"], input[type="password"], input[type = "date"], input[type="email"] {
+    width: 100%;
+    padding: var(--input-padding);
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;
+}
+
+.register-container button {
+    width: 100%;
+    padding: var(--input-padding);
+    margin-top: 5px;
+    background-color: var(--box-fill);
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.form-group {
+    display: flex;
+    div {
+        flex: 1;
+        margin-right: var(--indent);
+    }
+    #last-collumn {
+        /* margin-left: var(--indent); */
+        margin-right: 0;
+    }
+
+}
+
+#student_fields, #teacher_fields {
+    display: none;
+}
+
+.options {
+    padding: 5px;
+    margin-bottom: 10px;
+    display: flex;
+    input[type="radio"] {
+        margin-left: 20px;
+        margin-right: 5px;
+    }
+}
+#role {
+    justify-content: right !important;
+}
+
+

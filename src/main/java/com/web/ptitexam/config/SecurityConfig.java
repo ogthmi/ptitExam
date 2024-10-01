@@ -1,4 +1,4 @@
-package com.web.ptitExam.config;
+package com.web.ptitexam.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

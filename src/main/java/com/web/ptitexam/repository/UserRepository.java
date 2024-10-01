@@ -1,6 +1,6 @@
-package com.web.ptitExam.repository;
+package com.web.ptitexam.repository;
 
-import com.web.ptitExam.entity.User;
+import com.web.ptitexam.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,9 +1,7 @@
-package com.web.ptitExam.controller;
+package com.web.ptitexam.controller;
 
-import com.web.ptitExam.entity.User;
-import com.web.ptitExam.repository.UserRepository;
-import com.web.ptitExam.service.UserService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import com.web.ptitexam.entity.User;
+import com.web.ptitexam.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

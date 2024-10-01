@@ -1,8 +1,8 @@
-package com.web.ptitExam.service.implement;
+package com.web.ptitexam.service.implement;
 
-import com.web.ptitExam.entity.User;
-import com.web.ptitExam.repository.UserRepository;
-import com.web.ptitExam.service.UserService;
+import com.web.ptitexam.entity.User;
+import com.web.ptitexam.repository.UserRepository;
+import com.web.ptitexam.service.UserService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 

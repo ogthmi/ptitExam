@@ -1,4 +1,4 @@
-package com.web.ptitExam.entity;
+package com.web.ptitexam.entity;
 
 import jakarta.persistence.*;
 

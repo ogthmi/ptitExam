@@ -1,4 +1,4 @@
-package com.web.ptitExam;
+package com.web.ptitexam;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
