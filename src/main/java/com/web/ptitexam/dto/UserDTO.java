@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 public class UserDTO {
+    //Thuộc tính chung
     private String username;
     private String password;
     private String lastname;
@@ -12,6 +13,15 @@ public class UserDTO {
     private String gender;
     private String role;
     private String email;
+
+    //Thuộc tính của giáo viên
+    private String teacherId;
+    private String department;
+
+    //Thuộc tính cuủa sinh viên;
+    private String studentId;
+    private String major;
+    private String className;
 
     public UserDTO(){}
 
@@ -77,5 +87,45 @@ public class UserDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getTeacherId() {
+        return teacherId;
+    }
+
+    public void setTeacherId(String teacherId) {
+        this.teacherId = teacherId;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(String studentId) {
+        this.studentId = studentId;
+    }
+
+    public String getMajor() {
+        return major;
+    }
+
+    public void setMajor(String major) {
+        this.major = major;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
     }
 }

@@ -36,12 +36,16 @@ public class AuthController {
             model.addAttribute("error", "Dữ liệu nhập vào không hợp lệ");
             return LOGIN_PAGE;
         }
+        if (!userService.isUsernameTaken(userDTO.getUsername())){
+            model.addAttribute("error", "Tên đăng nhập không tồn tại.");
+            return LOGIN_PAGE;
+        }
         if (userService.authenticate(userDTO.getUsername(), userDTO.getPassword())) {
             User user = userService.findByUsername(userDTO.getUsername());
             String redirectUrl = getRedirectUrlBasedOnRole(user.getRole());
             return "redirect:/" + redirectUrl;
         } else {
-            model.addAttribute("error", "Tên đăng nhập hoặc mật khẩu không chính xác");
+            model.addAttribute("error", "Mật khẩu không chính xác.");
             return LOGIN_PAGE;
         }
     }
@@ -63,12 +67,28 @@ public class AuthController {
 
     @PostMapping("/register")
     public String registerUser(@ModelAttribute("userDTO") UserDTO userDTO, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            return REGISTER_PAGE + "?error";
+        if (userService.isUsernameTaken(userDTO.getUsername())) {
+            model.addAttribute("error", "Tên đăng nhập đã tồn tại.");
+            return REGISTER_PAGE; // Quay lại trang đăng ký với thông báo lỗi
         }
+
+        // Kiểm tra mật khẩu có null hay không
+        String password = userDTO.getPassword();
+        if (password == null || password.length() < 8) {
+            model.addAttribute("error", "Mật khẩu phải có tối thiểu 8 kí tự.");
+            return REGISTER_PAGE; // Quay lại trang đăng ký với thông báo lỗi
+        }
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("error", "Đã có lỗi xảy ra. Vui lòng thử lại.");
+            return REGISTER_PAGE;
+        }
+
         userService.registerUser(userDTO);
+        model.addAttribute("message", "Đăng ký thành công. Đang chuyển hướng về trang chủ.");
         String redirectUrl = getRedirectUrlBasedOnRole(userDTO.getRole());
-        return "redirect:/" + redirectUrl;
+        model.addAttribute("redirectUrl", redirectUrl);
+        return REGISTER_PAGE;
     }
 
 }

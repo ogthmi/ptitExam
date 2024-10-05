@@ -111,6 +111,28 @@ body {
     display: none;
 }
 
+.register-container .success-message p{
+    width: 100%;
+    background-color: #e4fde1;
+    border-radius: 3px;
+    color: #207335;
+    font-size: 14px;
+    padding: var(--input-padding);
+    box-sizing: border-box;
+
+}
+
+.register-container .error-message p{
+    width: 100%;
+    background-color: #FFcac7;
+    border-radius: 3px;
+    color: #bb2019;
+    font-size: 14px;
+    padding: var(--input-padding);
+    box-sizing: border-box;
+
+}
+
 .options {
     padding: 5px;
     margin-bottom: 10px;

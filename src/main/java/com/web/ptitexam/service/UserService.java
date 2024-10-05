@@ -7,4 +7,5 @@ public interface UserService {
    void registerUser (UserDTO userDTO);
    boolean authenticate (String username, String password);
    User findByUsername (String username);
+   boolean isUsernameTaken (String username);
 }

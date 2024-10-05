@@ -24,6 +24,34 @@
 
 <div class="register-container">
     <h2>Đăng ký</h2>
+
+    <div th:if="${message != null}" class="success-message" id="success-message"
+         th:attr="data-redirect-url=${redirectUrl}">
+        <p th:text="${message}"></p>
+    </div>
+
+    <div th:if="${error != null}" class="error-message" id="error-message">
+        <p th:text="${error}"></p>
+    </div>
+
+
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            var successMessage = document.getElementById('success-message');
+            var submitButton = document.getElementById('submit-button');
+            if (successMessage) {
+                submitButton.style.display = 'none'; // Ẩn nút submit khi form đang submit
+                // Truyền redirectUrl qua data attribute
+                var redirectUrl = successMessage.getAttribute('data-redirect-url');
+                setTimeout(function() {
+                    if (redirectUrl) { // Kiểm tra xem redirectUrl có hợp lệ không
+                        window.location.href = redirectUrl;
+                    }
+                }, 3000);
+            }
+        });
+    </script>
+
     <form th:action="@{/register}" method="post" th:object="${userDTO}">
         <div class="form-group">
             <div>
@@ -74,15 +102,77 @@
             </div>
         </div>
 
+        <div class="form-group" id="student_fields">
+            <div>
+                <label for="studentId">Mã sinh viên:</label>
+                <input type="text" th:field="*{studentId}" id="studentId" name="studentId">
+            </div>
+            <div>
+                <label for="major">Ngành học:</label>
+                <input type="text" th:field="*{major}" id="major" name="major">
+            </div>
+            <div id="last-collumn">
+                <label for="className">Lớp:</label>
+                <input type="text" th:field="*{className}" id="className" name="className">
+            </div>
+        </div>
+
+        <div class="form-group" id="teacher_fields">
+            <div>
+                <label for="teacherId">Mã giáo viên:</label>
+                <input type="text" th:field="*{teacherId}" id="teacherId" name="teacherId">
+            </div>
+            <div>
+                <label for="department">Khoa giảng dạy:</label>
+                <input type="text" th:field="*{department}" id="department" name="department">
+            </div>
+            <div id="last-collumn"></div>
+        </div>
+
+        <script type="text/javascript">
+            function toggleFields() {
+                var studentFields = document.getElementById("student_fields");
+                var teacherFields = document.getElementById("teacher_fields");
+
+                // Kiểm tra xem có radio button nào được chọn không
+                var selectedRole = document.querySelector('input[name="role"]:checked');
+
+                if (selectedRole) {
+                    // Nếu có radio button được chọn, kiểm tra giá trị của nó
+                    if (selectedRole.value === "ROLE_TEACHER") {
+                        teacherFields.style.display = "flex";  // Hiển thị các trường của giáo viên
+                        studentFields.style.display = "none";   // Ẩn các trường của sinh viên
+                    } else if (selectedRole.value === "ROLE_STUDENT") {
+                        studentFields.style.display = "flex";  // Hiển thị các trường của sinh viên
+                        teacherFields.style.display = "none";   // Ẩn các trường của giáo viên
+                    }
+                } else {
+                    // Nếu không có radio button nào được chọn, ẩn cả hai nhóm trường
+                    teacherFields.style.display = "none";
+                    studentFields.style.display = "none";
+                }
+            }
+            // Gọi hàm khi trang tải để kiểm tra trạng thái ban đầu
+            document.addEventListener('DOMContentLoaded', function () {
+                toggleFields(); // Đảm bảo các trường hiển thị đúng lúc trang vừa tải
+            });
+
+            // Gọi hàm mỗi khi có sự thay đổi của radio button
+            document.querySelectorAll('input[name="role"]').forEach(function(elem) {
+                elem.addEventListener('change', toggleFields);
+            });
+        </script>
+
         <div id="email">
             <label for="email">Email:</label>
             <input type="email" th:field="*{email}" id="email">
         </div>
 
-        <button type="submit">Đăng ký</button>
+        <button type="submit" id="submit-button">Đăng ký</button>
     </form>
 
 </div>
+
 
 </body>
 </html>

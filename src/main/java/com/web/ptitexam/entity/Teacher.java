@@ -1,13 +1,11 @@
 package com.web.ptitexam.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table (name = "teachers")
 public class Teacher {
+    @Id
     private String teacherId;
     private String department;
 
