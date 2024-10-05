@@ -1,13 +1,20 @@
-package com.web.ptitexam.dto;
+package com.web.ptitexam.entity;
 
-public class StudentDTO extends UserDTO{
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+
+@Entity
+@Table (name = "students")
+public class Student {
     private String studentId;
     private String major;
     private String className;
 
-    public StudentDTO(){
-        super();
-    }
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     public String getStudentId() {
         return studentId;
@@ -31,5 +38,13 @@ public class StudentDTO extends UserDTO{
 
     public void setClassName(String className) {
         this.className = className;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
