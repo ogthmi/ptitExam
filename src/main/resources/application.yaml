@@ -6,12 +6,22 @@ server:
 spring:
   application:
     name=PTIT-Exam
-  datasource:
-    url: "jdbc:mysql://localhost:3306/ptit-exam"
-    username: root
-    password: 089908
   security:
     user:
       name: admin
       password: admin
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: "jdbc:mysql://localhost:3306/ptit-exam"
+    username: root
+    password: 089908
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  logging:
+    level.org.hibernate:
+      SQL: DEBUG
+      Type: TRACE
 

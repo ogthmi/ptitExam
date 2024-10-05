@@ -7,21 +7,17 @@ import java.util.UUID;
 
 @Entity
 @Table (name = "users")
-@Inheritance (strategy = InheritanceType.JOINED)
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id", updatable = false, nullable = false)
-    private UUID id;
+
+    @Column(updatable = false, nullable = false)
+    private String userId;
 
     @Column(nullable = false, unique = true)
     private String username;
 
     @Column(nullable = false)
     private String password;
-
-    @Column(nullable = false)
-    private String role;  // ROLE_TEACHER hoặc ROLE_STUDENT
 
     @Column(nullable = false)
     private String firstname;
@@ -33,17 +29,23 @@ public class User {
     private LocalDate dob;
 
     @Column(nullable = false)
-    private String email;
+    private String gender;
 
     @Column(nullable = false)
-    private boolean enabled;
+    private String role;  // ROLE_TEACHER hoặc ROLE_STUDENT
 
-    public UUID getId() {
-        return id;
+    @Column(nullable = false)
+    private String email;
+
+
+    public User(){}
+
+    public String getUserId() {
+        return userId;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getUsername() {
@@ -60,14 +62,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 
     public String getFirstname() {
@@ -94,6 +88,22 @@ public class User {
         this.dob = dob;
     }
 
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -102,13 +112,6 @@ public class User {
         this.email = email;
     }
 
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
 }
 
 

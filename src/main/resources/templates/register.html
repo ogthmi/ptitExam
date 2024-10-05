@@ -24,119 +24,65 @@
 
 <div class="register-container">
     <h2>Đăng ký</h2>
-    <form action="#" method="post">
-
+    <form th:action="@{/register}" method="post" th:object="${userDTO}">
         <div class="form-group">
             <div>
                 <label for="username">Tên đăng nhập:</label>
-                <input type="text" name="username" required>
+                <input type="text" th:field="*{username}" id="username" required />
             </div>
             <div>
                 <label for="password">Mật khẩu:</label>
-                <input type="password" name="password" required>
+                <input required th:field="*{password}" type="password" id="password" />
             </div>
-            <div id="last-collumn">
 
-            </div>
+            <div></div>
         </div>
-
 
         <div class="form-group">
             <div>
                 <label for="lastname">Họ đệm:</label>
-                <input type="text" name="lastname" required>
+                <input type="text" th:field="*{lastname}" id="lastname" required>
             </div>
             <div>
                 <label for="firstname">Tên:</label>
-                <input type="text" name="firstname" required>
+                <input type="text" th:field="*{firstname}" id="firstname" required>
             </div>
-            <div id="last-collumn">
+            <div>
                 <label for="dob">Ngày sinh:</label>
-                <input type="date" name="dob" id="dob" required>
+                <input type="date" th:field="*{dob}" id="dob" required>
             </div>
         </div>
 
         <div class="form-group">
             <div class="options">
-                <label for="gender">Giới tính:</label>
-                <label for="male">
-                    <input type="radio" name="gender" value="male"> Nam
+                <label for="male">Giới tính:</label>
+                <label>
+                    <input type="radio" th:field="*{gender}" value="MALE" id="male"> Nam
                 </label>
-                <label for="female">
-                    <input type="radio" name="gender" value="female"> Nữ
+                <label>
+                    <input type="radio" th:field="*{gender}" value="FEMALE" id="female"> Nữ
                 </label>
             </div>
-            <div class="options" id="last-collumn" style="justify-content: right;">
+            <div class="options" style="justify-content: right;">
                 <label for="role">Chức vụ:</label>
-                <label for="teacher">
-                    <input type="radio" name="role" value="teacher" id="teacher"> Giáo viên
+                <label>
+                    <input type="radio" th:field="*{role}" value="ROLE_TEACHER" id="role"> Giáo viên
                 </label>
-                <label for="student">
-                    <input type="radio" name="role" value="student" id="student"> Sinh viên
+                <label>
+                    <input type="radio" th:field="*{role}" value="ROLE_STUDENT" id="role"> Sinh viên
                 </label>
             </div>
-        </div>
-
-        <div class="form-group" id="student_fields">
-            <div>
-                <label for="student_id">Mã sinh viên:</label>
-                <input type="text" name="student_id" id="student_id">
-            </div>
-            <div>
-                <label for="major">Ngành học:</label>
-                <input type="text" name="major" id="major">
-            </div>
-            <div id="last-collumn">
-                <label for="class_name">Lớp:</label>
-                <input type="text" name="class_name" id="class_name">
-            </div>
-        </div>
-
-        <div class="form-group" id="teacher_fields">
-            <div>
-                <label for="teacher_id">Mã giáo viên:</label>
-                <input type="text" name="teacher_id" id="teacher_id">
-            </div>
-            <div>
-                <label for="department">Khoa giảng dạy:</label>
-                <input type="text" name="department" id="department">
-            </div>
-            <div id="last-collumn"></div>
         </div>
 
         <div id="email">
             <label for="email">Email:</label>
-            <input type="email" name="email">
+            <input type="email" th:field="*{email}" id="email">
         </div>
 
         <button type="submit">Đăng ký</button>
     </form>
+
 </div>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-    var studentFields = document.getElementById("student_fields");
-    var teacherFields = document.getElementById("teacher_fields");
-
-    var studentRadio = document.getElementById("student");
-    var teacherRadio = document.getElementById("teacher");
-
-    // Thêm sự kiện khi chọn Sinh viên
-    studentRadio.addEventListener("change", function() {
-        if (studentRadio.checked) {
-            studentFields.style.display = "flex";  // Hiện các trường sinh viên
-            teacherFields.style.display = "none";   // Ẩn các trường giáo viên
-        }
-    });
-
-    // Thêm sự kiện khi chọn Giáo viên
-    teacherRadio.addEventListener("change", function() {
-        if (teacherRadio.checked) {
-            teacherFields.style.display = "flex";  // Hiện các trường giáo viên
-            studentFields.style.display = "none";   // Ẩn các trường sinh viên
-        }
-    });
-});
-</script>
 </body>
 </html>
