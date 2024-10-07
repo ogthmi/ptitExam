@@ -9,20 +9,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class HomeController {
 
     private final UserService userService;
-    private static final String TEACHER_HOME = "teacher";
-    private static final String STUDENT_HOME = "student";
+    private static final String TEACHER_HOME = "teacher/class";
+    private static final String STUDENT_HOME = "student/exam";
 
     public HomeController(UserService userService) {
         this.userService = userService;
     }
 
-    @GetMapping (value = "/student")
+    @GetMapping (value = "/teacher/class")
     public String showStudentHomePage (Model model){
-        return "/student";
+        return TEACHER_HOME;
     }
 
-    @GetMapping (value = "/teacher")
+    @GetMapping (value = "/student/exam")
     public String showTeacherHomePage (Model model){
-        return "/teacher";
+        return STUDENT_HOME;
     }
 }

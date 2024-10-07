@@ -16,8 +16,8 @@ public class AuthController {
 
     private final UserService userService;
     private static final String LOGIN_PAGE = "login";
-    private static final String TEACHER_HOME = "teacher";
-    private static final String STUDENT_HOME = "student";
+    private static final String TEACHER_HOME = "teacher/class";
+    private static final String STUDENT_HOME = "student/exam";
     private static final String REGISTER_PAGE = "register";
 
     public AuthController(UserService userService) {
