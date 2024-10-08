@@ -1,11 +1,15 @@
 package com.web.ptitexam.service;
 
 import com.web.ptitexam.dto.UserDTO;
-import com.web.ptitexam.entity.User;
 
 public interface UserService {
-   void registerUser (UserDTO userDTO);
-   boolean authenticate (String username, String password);
-   User findByUsername (String username);
-   boolean isUsernameTaken (String username);
+    void registerUser(UserDTO userDTO);
+
+    UserDTO authenticateAndGetUser(String username, String password);
+
+    UserDTO findByUsername(String username);
+
+    boolean isUsernameTaken(String username);
+
+    UserDTO getCurrentUser();
 }

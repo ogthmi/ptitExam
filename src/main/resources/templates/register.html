@@ -25,32 +25,9 @@
 <div class="register-container">
     <h2>Đăng ký</h2>
 
-    <div th:if="${message != null}" class="success-message" id="success-message"
-         th:attr="data-redirect-url=${redirectUrl}">
-        <p th:text="${message}"></p>
-    </div>
-
     <div th:if="${error != null}" class="error-message" id="error-message">
         <p th:text="${error}"></p>
     </div>
-
-
-    <script type="text/javascript">
-        document.addEventListener('DOMContentLoaded', function() {
-            var successMessage = document.getElementById('success-message');
-            var submitButton = document.getElementById('submit-button');
-            if (successMessage) {
-                submitButton.style.display = 'none'; // Ẩn nút submit khi form đang submit
-                // Truyền redirectUrl qua data attribute
-                var redirectUrl = successMessage.getAttribute('data-redirect-url');
-                setTimeout(function() {
-                    if (redirectUrl) { // Kiểm tra xem redirectUrl có hợp lệ không
-                        window.location.href = redirectUrl;
-                    }
-                }, 3000);
-            }
-        });
-    </script>
 
     <form th:action="@{/register}" method="post" th:object="${userDTO}">
         <div class="form-group">

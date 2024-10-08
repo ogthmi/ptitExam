@@ -8,7 +8,11 @@ import com.web.ptitexam.repository.StudentRepository;
 import com.web.ptitexam.repository.TeacherRepository;
 import com.web.ptitexam.repository.UserRepository;
 import com.web.ptitexam.service.UserService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +41,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void registerUser(UserDTO userDTO) {
         User user = new User();
-        user.setUserId(UUID.randomUUID().toString());
+        user.setUserId(UUID.randomUUID().toString()); // Tạo UUID cho user_id
         user.setUsername(userDTO.getUsername());
         user.setPassword(passwordEncoder.encode(userDTO.getPassword())); // Mã hóa mật khẩu
         user.setLastname(userDTO.getLastname());
@@ -47,38 +51,48 @@ public class UserServiceImpl implements UserService {
         user.setRole(userDTO.getRole());
         user.setEmail(userDTO.getEmail());
 
-        userRepository.save(user); // Lưu vào cơ sở dữ liệu
+        // Lưu thông tin người dùng vào cơ sở dữ liệu
+        userRepository.save(user);
 
+        // Kiểm tra vai trò người dùng và lưu thông tin vào bảng tương ứng
         if (userDTO.getRole().equals("ROLE_TEACHER")) {
             Teacher teacher = new Teacher();
-            teacher.setUser(user);
-            teacher.setTeacherId(userDTO.getTeacherId());
-            teacher.setDepartment(userDTO.getDepartment());
-            teacherRepository.save(teacher);
+            teacher.setUser(user); // Liên kết User với Teacher
+            teacher.setTeacherId(userDTO.getTeacherId()); // Đặt Teacher ID
+            teacher.setDepartment(userDTO.getDepartment()); // Đặt Department cho Teacher
+            teacherRepository.save(teacher); // Lưu vào Teacher repository
         } else if (userDTO.getRole().equals("ROLE_STUDENT")) {
             Student student = new Student();
-            student.setUser(user);
-            student.setStudentId(userDTO.getStudentId());
-            student.setMajor(userDTO.getMajor());
-            student.setClassName(userDTO.getClassName());
-            studentRepository.save(student);
+            student.setUser(user); // Liên kết User với Student
+            student.setStudentId(userDTO.getStudentId()); // Đặt Student ID
+            student.setMajor(userDTO.getMajor()); // Đặt Major cho Student
+            student.setClassName(userDTO.getClassName()); // Đặt Class Name cho Student
+            studentRepository.save(student); // Lưu vào Student repository
         }
     }
 
+
     @Override
-    public boolean authenticate(String username, String password) {
+    public UserDTO authenticateAndGetUser(String username, String password) {
+        // Tìm kiếm người dùng theo username
         User user = userRepository.findByUsername(username);
-        if (user == null) {
-            return false;
+
+        // Kiểm tra sự tồn tại của người dùng và xác thực mật khẩu
+        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+            // Map thông tin người dùng vào UserDTO
+            UserDTO userDTO = new UserDTO();
+            BeanUtils.copyProperties(user, userDTO);
+            return userDTO;
         }
-        System.out.println("Plain password: " + password);
-        System.out.println("Encoded password in DB: " + user.getPassword());
-        return passwordEncoder.matches(password, user.getPassword());
+        return null;
     }
 
     @Override
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public UserDTO findByUsername(String username) {
+        User user = userRepository.findByUsername(username);
+        UserDTO userDTO = new UserDTO();
+        BeanUtils.copyProperties(user, userDTO);
+        return userDTO;
     }
 
     @Override
@@ -86,4 +100,32 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUsername(username);
         return user != null;
     }
+
+    @Override
+    public UserDTO getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("\nAuthentication: " + authentication); // Logging
+
+        if (authentication != null
+                && authentication.isAuthenticated()
+                && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String username = userDetails.getUsername();
+            System.out.println("Username: " + username); // Logging
+
+            User user = userRepository.findByUsername(username);
+            if (user != null) {
+                System.out.println("User found: " + user.getUsername()); // Logging
+                UserDTO userDTO = new UserDTO();
+                BeanUtils.copyProperties(user, userDTO);
+                return userDTO;
+            } else {
+                System.out.println("User not found in repository");
+            }
+        }
+        return null;
+    }
+
+
+
 }

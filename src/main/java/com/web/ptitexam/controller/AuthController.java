@@ -4,12 +4,19 @@ import com.web.ptitexam.dto.UserDTO;
 import com.web.ptitexam.entity.User;
 import com.web.ptitexam.service.UserService;
 import org.springframework.boot.context.properties.bind.BindResult;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import java.util.Collections;
+import java.util.List;
 
 @Controller
 public class AuthController {
@@ -33,21 +40,19 @@ public class AuthController {
     @PostMapping(value = "/login")
     public String loginUser(@ModelAttribute("userDTO") UserDTO userDTO, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("error", "Dữ liệu nhập vào không hợp lệ");
+            model.addAttribute("error","Dữ liệu nhập vào không hợp lệ");
             return LOGIN_PAGE;
         }
-        if (!userService.isUsernameTaken(userDTO.getUsername())){
-            model.addAttribute("error", "Tên đăng nhập không tồn tại.");
+
+        // Kết hợp kiểm tra sự tồn tại của tên đăng nhập và xác thực mật khẩu
+        UserDTO authenticatedUser = userService.authenticateAndGetUser(userDTO.getUsername(), userDTO.getPassword());
+        if (authenticatedUser == null) {
+            model.addAttribute("error", "Tên đăng nhập hoặc mật khẩu không chính xác.");
             return LOGIN_PAGE;
         }
-        if (userService.authenticate(userDTO.getUsername(), userDTO.getPassword())) {
-            User user = userService.findByUsername(userDTO.getUsername());
-            String redirectUrl = getRedirectUrlBasedOnRole(user.getRole());
-            return "redirect:/" + redirectUrl;
-        } else {
-            model.addAttribute("error", "Mật khẩu không chính xác.");
-            return LOGIN_PAGE;
-        }
+
+        String redirectUrl = getRedirectUrlBasedOnRole(authenticatedUser.getRole());
+        return "redirect:/" + redirectUrl;
     }
 
 
@@ -84,11 +89,30 @@ public class AuthController {
             return REGISTER_PAGE;
         }
 
-        userService.registerUser(userDTO);
-        model.addAttribute("message", "Đăng ký thành công. Đang chuyển hướng về trang chủ.");
+        // Đăng ký người dùng mới và lưu thông tin người dùng
+        userService.registerUser(userDTO); // Đăng ký người dùng
+
+        // Tạo danh sách quyền (Authorities) dựa trên vai trò người dùng
+        List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(userDTO.getRole()));
+
+        // Tạo Authentication với danh sách quyền của người dùng
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                userDTO.getUsername(),   // Username
+                null,                    // Password không cần thiết
+                authorities               // Danh sách quyền (authorities)
+        );
+
+        // Đặt thông tin đăng nhập vào SecurityContext
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        // Lấy URL chuyển hướng dựa trên vai trò của người dùng
         String redirectUrl = getRedirectUrlBasedOnRole(userDTO.getRole());
-        model.addAttribute("redirectUrl", redirectUrl);
-        return REGISTER_PAGE;
+        model.addAttribute("message", "Đăng ký thành công!");
+
+        // Chuyển hướng về trang mong muốn sau khi đăng ký thành công
+        return "redirect:" + redirectUrl;
     }
+
+
 
 }

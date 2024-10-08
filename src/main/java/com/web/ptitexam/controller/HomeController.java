@@ -1,9 +1,12 @@
 package com.web.ptitexam.controller;
 
+import com.web.ptitexam.dto.UserDTO;
 import com.web.ptitexam.service.UserService;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Controller
 public class HomeController {
@@ -16,13 +19,15 @@ public class HomeController {
         this.userService = userService;
     }
 
-    @GetMapping (value = "/teacher/class")
-    public String showStudentHomePage (Model model){
-        return TEACHER_HOME;
+    @GetMapping(value = "/teacher/class")
+    public String showTeacherHomePage(Model model) {
+        UserDTO currentUser = userService.getCurrentUser(); // Lấy người dùng hiện tại
+        model.addAttribute("userDTO", currentUser); // Thêm UserDTO vào model
+        return "teacher/class"; // Trả về trang teacher/class
     }
 
     @GetMapping (value = "/student/exam")
-    public String showTeacherHomePage (Model model){
+    public String showStudentHomePage (Model model){
         return STUDENT_HOME;
     }
 }
