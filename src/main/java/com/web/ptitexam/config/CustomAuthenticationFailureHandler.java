@@ -1,5 +1,6 @@
 package com.web.ptitexam.config;
 
+import com.web.ptitexam.constant.Constant;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,7 +19,8 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
             HttpServletResponse response,
             AuthenticationException exception)
             throws IOException, ServletException {
+        System.out.println("Authentication failed.");
         request.getSession().setAttribute("error", "Tên đăng nhập hoặc mật khẩu không chính xác.");
-        response.sendRedirect("/ptit-exam/login"); // Chuyển hướng với thông báo lỗi
+        response.sendRedirect(Constant.MAIN_DIR + "/" + Constant.PAGE_LOGIN);
     }
 }

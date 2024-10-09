@@ -23,11 +23,14 @@
 </div>
 
 <div class="register-container">
-    <h2>Đăng ký</h2>
+    <div class="message">
+        <h2>Đăng ký</h2>
 
-    <div th:if="${error != null}" class="error-message" id="error-message">
-        <p th:text="${error}"></p>
+        <div th:if="${error != null}" id="error-message">
+            <p th:text="${error}"></p>
+        </div>
     </div>
+
 
     <form th:action="@{/register}" method="post" th:object="${userDTO}">
         <div class="form-group">
@@ -71,10 +74,10 @@
             <div class="options" style="justify-content: right;">
                 <label for="role">Chức vụ:</label>
                 <label>
-                    <input type="radio" th:field="*{role}" value="ROLE_TEACHER" id="role"> Giáo viên
+                    <input type="radio" th:field="*{role}" value="TEACHER" id="role"> Giáo viên
                 </label>
                 <label>
-                    <input type="radio" th:field="*{role}" value="ROLE_STUDENT" id="role"> Sinh viên
+                    <input type="radio" th:field="*{role}" value="STUDENT" id="role"> Sinh viên
                 </label>
             </div>
         </div>
@@ -116,10 +119,10 @@
 
                 if (selectedRole) {
                     // Nếu có radio button được chọn, kiểm tra giá trị của nó
-                    if (selectedRole.value === "ROLE_TEACHER") {
+                    if (selectedRole.value === "TEACHER") {
                         teacherFields.style.display = "flex";  // Hiển thị các trường của giáo viên
                         studentFields.style.display = "none";   // Ẩn các trường của sinh viên
-                    } else if (selectedRole.value === "ROLE_STUDENT") {
+                    } else if (selectedRole.value === "STUDENT") {
                         studentFields.style.display = "flex";  // Hiển thị các trường của sinh viên
                         teacherFields.style.display = "none";   // Ẩn các trường của giáo viên
                     }

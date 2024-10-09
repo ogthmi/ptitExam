@@ -1,5 +1,6 @@
 package com.web.ptitexam.config;
 
+import com.web.ptitexam.constant.Constant;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,20 +18,22 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             HttpServletResponse response,
             Authentication authentication)
             throws IOException, ServletException {
-        String redirectUrl = ""; // Default redirect URL
+
+        String redirectUrl;
 
         // Log for debugging
         System.out.println("Authentication Success for user: " + authentication.getName());
         System.out.println("Authorities: " + authentication.getAuthorities());
 
         // Redirect based on the role
-        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_TEACHER"))) {
-            redirectUrl = "/ptit-exam/teacher/class"; // Redirect teachers
-        } else if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_STUDENT"))) {
-            redirectUrl = "/ptit-exam/student/exam";  // Redirect students
+        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority(Constant.ROLE_TEACHER))) {
+            redirectUrl = Constant.MAIN_DIR + "/" + Constant.PAGE_TEACHER_CLASSROOM;
+        } else if (authentication.getAuthorities().contains(new SimpleGrantedAuthority(Constant.ROLE_STUDENT))) {
+            redirectUrl = Constant.MAIN_DIR + "/" + Constant.PAGE_STUDENT_CLASSROOM;
+        } else if (authentication.getAuthorities().contains(new SimpleGrantedAuthority(Constant.ROLE_ADMIN))) {
+            redirectUrl = Constant.MAIN_DIR + "/" + Constant.PAGE_ADMIN_DASHBOARD;
         } else {
-            // Fallback URL in case no role matches
-            redirectUrl = "/ptit-exam/error";
+            redirectUrl = Constant.MAIN_DIR + "/error";
         }
 
         // Check if redirectUrl is set and send redirect

@@ -38,7 +38,7 @@ body {
 
 .openning-title {
     text-align: center;
-    margin-bottom: 50px;
+    margin-bottom: 30px;
 
     h1 {
         color: var(--gray-text);
@@ -54,18 +54,35 @@ body {
     border: 1px solid #ccc;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.message {
+    display: flex;
     h2 {
         color: var(--gray-text);
         font-size: 20px;
         margin-top: 0;
+        margin-bottom: 25px;
 
     }
 
-    h3 {
-        color: var(--gray-text);
-        font-size: 16px;
+    p {
         margin-top: 0;
+        margin-left: 20px;
+        border-radius: 3px;
+        font-size: 14px;
+        padding: var(--input-padding) 20px;
+        box-sizing: border-box;
     }
+    #error-message p{
+        background-color: #FFcac7;
+        color: #bb2019;
+    }
+    #success-message p{
+        background-color: #e4fde1;
+        color: #1c7b1c;
+    }
+
 }
 
 .register-container label {
@@ -107,30 +124,8 @@ body {
 
 }
 
-#student_fields, #teacher_fields {
+.register-container #student_fields, .register-container #teacher_fields {
     display: none;
-}
-
-.register-container .success-message p{
-    width: 100%;
-    background-color: #e4fde1;
-    border-radius: 3px;
-    color: #207335;
-    font-size: 14px;
-    padding: var(--input-padding);
-    box-sizing: border-box;
-
-}
-
-.register-container .error-message p{
-    width: 100%;
-    background-color: #FFcac7;
-    border-radius: 3px;
-    color: #bb2019;
-    font-size: 14px;
-    padding: var(--input-padding);
-    box-sizing: border-box;
-
 }
 
 .options {
@@ -145,5 +140,4 @@ body {
 #role {
     justify-content: right !important;
 }
-
 

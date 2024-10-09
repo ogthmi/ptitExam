@@ -18,7 +18,12 @@
   <div class="nav_user_info">
     <div id="nav_username">
       <h4 th:text="${userDTO.lastname} + ' ' + ${userDTO.firstname}">Tên người dùng</h4>
-      <h5 th:text="${userDTO.role == 'ROLE_TEACHER' ? 'Giáo viên' : 'Sinh viên'}">Vai trò</h5>
+      <h5 th:text="${userDTO.role == 'TEACHER' ? 'Giáo viên' :
+         (userDTO.role == 'STUDENT' ? 'Sinh viên' :
+         (userDTO.role == 'STUDENT' ? 'Quản trị viên' : 'null'
+      ))}">
+        Vai trò
+      </h5>
     </div>
     <div id="user_more_tools"> ▼
       <ul class="user-menu">

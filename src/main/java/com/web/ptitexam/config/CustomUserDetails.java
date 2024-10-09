@@ -18,18 +18,17 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Trả về quyền của người dùng từ vai trò (role)
         return Collections.singleton(new SimpleGrantedAuthority(user.getRole()));
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword(); // Trả về mật khẩu đã mã hóa
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return user.getUsername(); // Trả về tên đăng nhập
+        return user.getUsername();
     }
 
     @Override
