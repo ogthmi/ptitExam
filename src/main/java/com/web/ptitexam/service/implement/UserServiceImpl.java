@@ -9,14 +9,20 @@ import com.web.ptitexam.repository.StudentRepository;
 import com.web.ptitexam.repository.TeacherRepository;
 import com.web.ptitexam.repository.UserRepository;
 import com.web.ptitexam.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -28,6 +34,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private final TeacherRepository teacherRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    private HttpServletRequest request;
 
     public UserServiceImpl(UserRepository userRepository,
                            StudentRepository studentRepository,
@@ -72,6 +81,18 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public void authenticateRegistration(UserDTO userDTO){
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                userDTO.getUsername(),
+                userDTO.getPassword(),
+                List.of(new SimpleGrantedAuthority(userDTO.getRole()))
+        );
+        System.out.println(authenticationToken);
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        HttpSession session = request.getSession();
+        session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
+    }
 
     @Override
     public boolean isUsernameTaken (String username){
@@ -82,9 +103,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO getCurrentUser() {
         UserDTO userDTO = new UserDTO();
+        
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         User user = userRepository.findByUsername(authentication.getName());
-        BeanUtils.copyProperties(user, userDTO);
+
+        // Check if user is found before copying properties
+        if (user != null) {
+            BeanUtils.copyProperties(user, userDTO);
+        }
         return userDTO;
     }
 }

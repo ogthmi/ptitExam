@@ -34,7 +34,26 @@
   </div>
 </nav>
 <div class="content">
-  <h2 class="">Lớp học</h2>
+
+  <div class="message">
+    <h2>Lớp học</h2>
+    <div th:if="${success}"  id="success-message">
+      <p th:text="${success}"></p>
+    </div>
+    <script>
+      // Kiểm tra nếu phần tử success-message tồn tại trên trang
+      window.addEventListener('load', function () {
+          var successMessage = document.getElementById("success-message");
+          if (successMessage) {
+              // Ẩn thông báo sau 3 giây
+              setTimeout(function () {
+                  successMessage.style.display = 'none';
+              }, 5000);
+          }
+      });
+    </script>
+  </div>
+
   <div class="search_tool">
     <input type="text" name="classroom" id="search_input" placeholder="Tìm kiếm lớp">
     <select id="sort_method">
@@ -61,6 +80,7 @@
       <tbody>
       <tr>
         <td>1</td>
+        <td>ABDCE0</td>
         <td>TƯ TƯỞNG HỒ CHÍ MINH</td>
         <td>4/10/2024</td>
         <td>0</td>
@@ -68,6 +88,7 @@
       </tr>
       <tr>
         <td>2</td>
+        <td>RQASD1</td>
         <td>PHÁP LUẬT ĐẠI CƯƠNG</td>
         <td>5/10/2024</td>
         <td>0</td>

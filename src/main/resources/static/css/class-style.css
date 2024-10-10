@@ -9,6 +9,7 @@ body {
     --gray-text: #4c4c4c;
     --box-fill: #bb2019;
     --shadow: rgba(0, 0, 0, 0.1);
+    --input-padding: 7px;
 }
 
 /* Navgiation bar */
@@ -121,6 +122,27 @@ nav {
         color: var(--gray-text);
         margin-bottom: 30px;
     }
+}
+
+.message {
+    display: flex;
+    justify-content: space-between;
+    vertical-align: middle;
+    p {
+        border-radius: 3px;
+        font-size: 14px;
+        padding: var(--input-padding) 20px;
+        box-sizing: border-box;
+    }
+    #error-message p{
+        background-color: #FFcac7;
+        color: #bb2019;
+    }
+    #success-message p{
+        background-color: #e4fde1;
+        color: #1c7b1c;
+    }
+
 }
 
 /* Search tool */

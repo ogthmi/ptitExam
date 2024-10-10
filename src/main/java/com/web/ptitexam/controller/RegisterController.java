@@ -3,33 +3,28 @@ package com.web.ptitexam.controller;
 import com.web.ptitexam.constant.Constant;
 import com.web.ptitexam.dto.UserDTO;
 import com.web.ptitexam.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.Collections;
 import java.util.List;
 
 @Controller
-public class LogController {
+public class RegisterController {
 
     private final UserService userService;
 
-    public LogController(UserService userService) {
+    public RegisterController(UserService userService) {
         this.userService = userService;
-    }
-
-    @GetMapping(value = Constant.PAGE_LOGIN)
-    public String getLoginForm(Model model) {
-        model.addAttribute("userDTO", new UserDTO());
-        return Constant.PAGE_LOGIN;
     }
 
     private String getRedirectUrlBasedOnRole (String role) {
@@ -50,7 +45,8 @@ public class LogController {
     @PostMapping(value = Constant.PAGE_REGISTER)
     public String registerUser(@ModelAttribute("userDTO") UserDTO userDTO,
                                BindingResult bindingResult,
-                               Model model) {
+                               Model model,
+                               RedirectAttributes redirectAttributes) {
         if (userService.isUsernameTaken(userDTO.getUsername())) {
             model.addAttribute("error", "Tên đăng nhập đã tồn tại.");
             return Constant.PAGE_REGISTER;
@@ -67,19 +63,11 @@ public class LogController {
             return Constant.PAGE_REGISTER;
         }
 
-        userService.registerUser(userDTO); // Đăng ký người dùng
-        List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(userDTO.getRole()));
-        Authentication authentication = new UsernamePasswordAuthenticationToken(
-                userDTO.getUsername(),   // Username
-                null,                    // Password (unnecessary)
-                authorities              // Authorities list
-        );
-        System.out.println(authentication);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        userService.registerUser(userDTO);
+        userService.authenticateRegistration(userDTO);
 
         String redirectUrl = getRedirectUrlBasedOnRole(userDTO.getRole());
-        model.addAttribute("success", "Đăng ký thành công.");
-
+        redirectAttributes.addFlashAttribute("success", "Đăng ký người dùng thành công.");
         return Constant.REDIRECT + redirectUrl;
     }
 }

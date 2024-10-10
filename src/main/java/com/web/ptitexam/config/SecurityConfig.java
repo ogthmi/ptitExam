@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -35,7 +36,10 @@ public class SecurityConfig{
                 )
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login")
-                        .permitAll()
+                        .permitAll())
+                .sessionManagement(session -> session
+                        // Cấu hình chính sách tạo session ở đây
+                        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
                 );
         return http.build();
     }

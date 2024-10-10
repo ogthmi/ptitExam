@@ -7,5 +7,7 @@ public interface UserService {
 
     boolean isUsernameTaken(String username);
 
+    void authenticateRegistration(UserDTO userDTO);
+
     UserDTO getCurrentUser();
 }

@@ -1,6 +1,12 @@
 package com.web.ptitexam.constant;
 
+import javax.swing.plaf.PanelUI;
+
 public class Constant {
+
+    //Gender
+    public static final String GENDER_MALE = "MALE";
+    public static final String GENDER_FEMALE = "FEMALE";
 
     // Roles
     public static final String ROLE_STUDENT = "STUDENT";
