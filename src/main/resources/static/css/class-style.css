@@ -96,7 +96,6 @@ nav {
 
     li:hover {
         background-color: var(--hover);
-        text-decoration: underline;
         cursor: pointer;
     }
 
@@ -112,6 +111,17 @@ nav {
 
 .user-menu.show {
     display: block;
+}
+
+#logout_button button{
+    padding: 0;
+    background-color: transparent;
+    border: none;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 14px;
+    text-align: left;
+    color: black;
+    cursor:pointer
 }
 
 /* Body */

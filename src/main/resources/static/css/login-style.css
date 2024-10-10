@@ -100,6 +100,18 @@ body {
     box-sizing: border-box;
 
 }
+
+.login-container .logout-message p{
+    width: 100%;
+    background-color: #FFE699;
+    border-radius: 3px;
+    color: #C65911;
+    font-size: 14px;
+    padding: var(--input-padding);
+    box-sizing: border-box;
+
+}
+
 .forgot-password,
 .remember-password,
 .sign-up {

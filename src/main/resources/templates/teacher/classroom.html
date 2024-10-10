@@ -12,7 +12,6 @@
     <ul>
       <li>Lớp học</li>
       <li>Đề thi</li>
-      <li>Hướng dẫn</li>
     </ul>
   </div>
   <div class="nav_user_info">
@@ -28,7 +27,12 @@
     <div id="user_more_tools"> ▼
       <ul class="user-menu">
         <li><a href="#">Hồ sơ</a></li>
-        <li><a href="#">Đăng xuất</a></li>
+        <li><a href="#">Hướng dẫn</a></li>
+        <li>
+          <form th:action="@{/logout}" method = "post" id = "logout_button">
+            <button type="submit">Đăng xuất</button>
+          </form>
+        </li>
       </ul>
     </div>
   </div>

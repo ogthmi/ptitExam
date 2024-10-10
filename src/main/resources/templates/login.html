@@ -24,6 +24,9 @@
     <div th:if="${session.error}" class="error-message" id="error-message">
         <p th:text="${session.error}">Tên đăng nhập hoặc mật khẩu không chính xác.</p>
     </div>
+    <div th:if="${param.logout}" class="logout-message" id="logout-message">
+        <p>Đăng xuất thành công.</p>
+    </div>
     <form th:action="@{/login}" method="post" th:object="${userDTO}">
         <label for="username">Tên đăng nhập:</label>
         <input type="text" id="username" name="username" required th:field="*{username}">

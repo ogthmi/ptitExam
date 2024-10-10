@@ -35,8 +35,13 @@ public class SecurityConfig{
                         .permitAll()
                 )
                 .logout(logout -> logout
-                        .logoutSuccessUrl("/login")
-                        .permitAll())
+                        .logoutUrl("/logout") // URL để đăng xuất
+                        .logoutSuccessUrl("/" + Constant.PAGE_LOGIN + "?logout") // Trang chuyển hướng sau khi đăng xuất thành công
+                        .invalidateHttpSession(true) // Hủy phiên khi đăng xuất
+                        .clearAuthentication(true) // Xóa thông tin xác thực
+                        .deleteCookies("JSESSIONID") // Xóa cookie JSESSIONID
+                        .permitAll()
+                )
                 .sessionManagement(session -> session
                         // Cấu hình chính sách tạo session ở đây
                         .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
