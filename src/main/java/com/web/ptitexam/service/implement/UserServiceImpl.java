@@ -11,6 +11,7 @@ import com.web.ptitexam.repository.UserRepository;
 import com.web.ptitexam.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,7 +22,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 userDTO.getUsername(),
                 userDTO.getPassword(),
-                List.of(new SimpleGrantedAuthority("ROLE_" + userDTO.getRole()))
+                List.of(new SimpleGrantedAuthority(userDTO.getRole()))
         );
         System.out.println(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
@@ -99,6 +99,7 @@ public class UserServiceImpl implements UserService {
         return user != null;
     }
 
+    @Transactional
     @Override
     public UserDTO getCurrentUser() {
         UserDTO userDTO = new UserDTO();
@@ -111,20 +112,15 @@ public class UserServiceImpl implements UserService {
             if (Constant.ROLE_TEACHER.equals(user.getRole())) {
                 Teacher teacher = user.getTeacher();
                 if (teacher != null) {
-                    userDTO.setTeacherId(teacher.getTeacherId());
-                    userDTO.setDepartment(teacher.getDepartment());
+                    BeanUtils.copyProperties(teacher, userDTO);
                 }
             }
             else if (Constant.ROLE_STUDENT.equals(user.getRole())) {
-                // Nếu là sinh viên, lấy thông tin từ bảng Student
-                Optional<Student> studentOpt = studentRepository.findById(user.getUserId());
-                if (studentOpt.isPresent()) {
-                    Student student = studentOpt.get();
-                    // Copy thông tin sinh viên vào userDTO
+                Student student = user.getStudent();
+                if (student != null)
                     BeanUtils.copyProperties(student, userDTO);
                 }
             }
-        }
         return userDTO;
     }
 }

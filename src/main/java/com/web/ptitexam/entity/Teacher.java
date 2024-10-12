@@ -9,7 +9,7 @@ public class Teacher {
     private String teacherId;
     private String department;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "userId")
     private User user;
 

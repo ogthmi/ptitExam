@@ -11,8 +11,8 @@ public class Student {
     private String major;
     private String className;
 
-    @OneToOne
-    @JoinColumn(name = "user_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId", referencedColumnName = "userId")
     private User user;
 
     public String getStudentId() {

@@ -47,8 +47,8 @@ public class SecurityConfig{
                                 .requestMatchers("/css/**", "/image/**", "/register")
                                 .permitAll()
 
-                                .requestMatchers("/teacher/**").hasRole("TEACHER")
-                                .requestMatchers("/student/**").hasRole("STUDENT")
+                                .requestMatchers("/teacher/**").hasAuthority(Constant.ROLE_TEACHER)
+                                .requestMatchers("/student/**").hasAuthority(Constant.ROLE_STUDENT)
                                 .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

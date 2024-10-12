@@ -11,7 +11,7 @@ public class Constant {
     // Roles
     public static final String ROLE_STUDENT = "STUDENT";
     public static final String ROLE_TEACHER = "TEACHER";
-    public static final String ROLE_ADMIN = "ADMINISTRATOR";
+    public static final String ROLE_ADMIN = "ADMIN";
 
     // Absolute URL
     public static final String MAIN_DIR = "/ptit-exam";

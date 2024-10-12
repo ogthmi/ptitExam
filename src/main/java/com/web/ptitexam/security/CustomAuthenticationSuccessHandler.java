@@ -26,11 +26,11 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         System.out.println("Authorities: " + authentication.getAuthorities());
 
         // Redirect based on the role
-        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_" + Constant.ROLE_TEACHER))) {
+        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority(Constant.ROLE_TEACHER))) {
             redirectUrl = Constant.MAIN_DIR + "/" + Constant.PAGE_TEACHER_CLASSROOM;
-        } else if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_" + Constant.ROLE_STUDENT))) {
+        } else if (authentication.getAuthorities().contains(new SimpleGrantedAuthority(Constant.ROLE_STUDENT))) {
             redirectUrl = Constant.MAIN_DIR + "/" + Constant.PAGE_STUDENT_CLASSROOM;
-        } else if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_"+Constant.ROLE_ADMIN))) {
+        } else if (authentication.getAuthorities().contains(new SimpleGrantedAuthority(Constant.ROLE_ADMIN))) {
             redirectUrl = Constant.MAIN_DIR + "/" + Constant.PAGE_ADMIN_DASHBOARD;
         } else {
             redirectUrl = Constant.MAIN_DIR + "/error";
