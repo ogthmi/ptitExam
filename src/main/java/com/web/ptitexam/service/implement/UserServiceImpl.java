@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 userDTO.getUsername(),
                 userDTO.getPassword(),
-                List.of(new SimpleGrantedAuthority(userDTO.getRole()))
+                List.of(new SimpleGrantedAuthority("ROLE_" + userDTO.getRole()))
         );
         System.out.println(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);

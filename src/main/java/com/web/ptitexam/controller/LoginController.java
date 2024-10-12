@@ -13,4 +13,9 @@ public class LoginController {
         model.addAttribute("userDTO", new UserDTO());
         return Constant.PAGE_LOGIN;
     }
+
+    @GetMapping("/access-deny")
+    public String getForbiddenPage(Model model) {
+        return "403/deny";
+    }
 }

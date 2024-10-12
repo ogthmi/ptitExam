@@ -24,4 +24,3 @@ spring:
     level.org.hibernate:
       SQL: DEBUG
       Type: TRACE
-
