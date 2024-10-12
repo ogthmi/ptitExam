@@ -10,7 +10,7 @@ public class Teacher {
     private String department;
 
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "userId", referencedColumnName = "userId")
     private User user;
 
     public String getTeacherId() {

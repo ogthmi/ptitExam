@@ -128,4 +128,23 @@ public class UserDTO {
     public void setClassName(String className) {
         this.className = className;
     }
+
+    @Override
+    public String toString() {
+        return "UserDTO{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", firstname='" + firstname + '\'' +
+                ", dob=" + dob +
+                ", gender='" + gender + '\'' +
+                ", role='" + role + '\'' +
+                ", email='" + email + '\'' +
+                ", teacherId='" + teacherId + '\'' +
+                ", department='" + department + '\'' +
+                ", studentId='" + studentId + '\'' +
+                ", major='" + major + '\'' +
+                ", className='" + className + '\'' +
+                '}';
+    }
 }

@@ -1,4 +1,4 @@
-package com.web.ptitexam.config;
+package com.web.ptitexam.security;
 
 import com.web.ptitexam.entity.User;
 import org.springframework.security.core.GrantedAuthority;

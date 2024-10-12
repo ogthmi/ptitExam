@@ -18,9 +18,16 @@ public class ClassroomController {
 
     @GetMapping(value = Constant.PAGE_TEACHER_CLASSROOM)
     public String showTeacherClassroom(Model model) {
-        UserDTO currentUser = userService.getCurrentUser(); // Lấy người dùng hiện tại
-        model.addAttribute("userDTO", currentUser); // Thêm UserDTO vào model
-        return Constant.PAGE_TEACHER_CLASSROOM; // Trả về trang teacher/class
+        UserDTO currentUser = userService.getCurrentUser();
+        model.addAttribute("userDTO", currentUser);
+        return Constant.PAGE_TEACHER_CLASSROOM;
+    }
+
+    @GetMapping(value = Constant.PAGE_STUDENT_CLASSROOM)
+    public String showStudentClassroom(Model model) {
+        UserDTO currentUser = userService.getCurrentUser();
+        model.addAttribute("userDTO", currentUser);
+        return Constant.PAGE_STUDENT_CLASSROOM;
     }
 
 }

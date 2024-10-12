@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="vn, en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Trang chủ</title>
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" th:href="@{/css/class-style.css}">
+    <link rel="icon" th:href="@{/image/login/PTIT_LOGO.png}">
+</head>
+<body>
+<nav>
+    <div class="nav_function">
+        <img th:src="@{/image/homepage/PTIT_LOGO_WHITE.png}" alt="PTIT Logo">
+        <ul>
+            <li>Lớp học</li>
+            <li>Đề thi</li>
+        </ul>
+    </div>
+    <div class="nav_user_info">
+        <div id="nav_username">
+            <h4 th:text="${userDTO.lastname} + ' ' + ${userDTO.firstname}">Tên người dùng</h4>
+            <h5 th:text="${userDTO.role == 'TEACHER' ? 'Giáo viên' :
+         (userDTO.role == 'STUDENT' ? 'Sinh viên' :
+         (userDTO.role == 'STUDENT' ? 'Quản trị viên' : 'null'
+      ))}">
+                Vai trò
+            </h5>
+        </div>
+        <div id="user_more_tools"> ▼
+            <ul class="user-menu">
+                <li><a href="#">Hồ sơ</a></li>
+                <li><a href="#">Hướng dẫn</a></li>
+                <li>
+                    <form th:action="@{/logout}" method = "post" id = "logout_button">
+                        <button type="submit">Đăng xuất</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="content">
+    <div class="message">
+        <h2>Hồ sơ người dùng</h2>
+        <div th:if="${success}"  id="success-message">
+            <p th:text="${success}"></p>
+        </div>
+    </div>
+    <div>
+        <p th:text="${userDTO.username}"></p>
+        <p th:text="${userDTO.password}"></p>
+        <p th:text="${userDTO.lastname}"></p>
+        <p th:text="${userDTO.firstname}"></p>
+        <p th:text="${userDTO.dob}"></p>
+        <p th:text="${userDTO.gender}"></p>
+        <p th:text="${userDTO.role}"></p>
+        <p th:text="${userDTO.teacherId}"></p>
+        <p th:text="${userDTO.department}"></p>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const moreTools = document.getElementById('user_more_tools');
+        const userMenu = moreTools.querySelector('.user-menu');
+
+        // Toggle menu khi bấm vào biểu tượng tam giác
+        moreTools.addEventListener('click', (event) => {
+            event.stopPropagation(); // Ngăn không để sự kiện bấm vào phần tử cha
+            userMenu.classList.toggle('show');
+        });
+
+        // Đóng menu khi bấm ra ngoài
+        document.addEventListener('click', (event) => {
+            if (!moreTools.contains(event.target)) { // Kiểm tra nếu không bấm vào trong menu
+                userMenu.classList.remove('show'); // Xóa lớp 'show' để ẩn menu
+            }
+        });
+    });
+</script>
+</body>
+</html>

@@ -22,7 +22,7 @@ public class Constant {
     // Shared pages
     public static final String PAGE_LOGIN = "login";
     public static final String PAGE_REGISTER = "register";
-    public static final String PAGE_USER_INFO = "user-info";
+    public static final String PAGE_USER_PROFILE = "user-info";
 
     // Admin's page
     public static final String ADMIN_SUBDIR = "admin";
@@ -34,5 +34,5 @@ public class Constant {
 
     // Student's page
     public static final String STUDENT_SUBDIR = "student";
-    public static final String PAGE_STUDENT_CLASSROOM = STUDENT_SUBDIR + "/classroon";
+    public static final String PAGE_STUDENT_CLASSROOM = STUDENT_SUBDIR + "/classroom";
 }

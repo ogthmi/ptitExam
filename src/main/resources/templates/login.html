@@ -26,6 +26,17 @@
     </div>
     <div th:if="${param.logout}" class="logout-message" id="logout-message">
         <p>Đăng xuất thành công.</p>
+        <script>
+            // Kiểm tra nếu phần tử success-message tồn tại trên trang
+            window.addEventListener('load', function () {
+                var successMessage = document.getElementById("logout-message");
+                if (successMessage) {
+                    setTimeout(function () {
+                        successMessage.style.display = 'none';
+                    }, 5000);
+                }
+            });
+        </script>
     </div>
     <form th:action="@{/login}" method="post" th:object="${userDTO}">
         <label for="username">Tên đăng nhập:</label>
@@ -34,11 +45,6 @@
         <label for="password">Mật khẩu:</label>
         <input type="password" id="password" name="password" required th:field="*{password}">
 
-        <div class="remember-password">
-            <input type="checkbox" id="remember-me">
-            <label for="remember-me">Ghi nhớ mật khẩu</label>
-        </div>
-        <a href="forgot-password.html" class="forgot-password">Quên mật khẩu?</a>
 
         <button type="submit">Đăng nhập</button>
 

@@ -32,11 +32,13 @@ public class User {
     private String gender;
 
     @Column(nullable = false)
-    private String role;  // ROLE_TEACHER hoặc ROLE_STUDENT
+    private String role;
 
     @Column(nullable = false)
     private String email;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Teacher teacher;
 
     public User(){}
 
@@ -112,6 +114,13 @@ public class User {
         this.email = email;
     }
 
+    public Teacher getTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(Teacher teacher) {
+        this.teacher = teacher;
+    }
 }
 
 

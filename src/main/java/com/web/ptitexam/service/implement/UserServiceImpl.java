@@ -17,12 +17,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -82,7 +81,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void authenticateRegistration(UserDTO userDTO){
+    public void authenticateRegistration(UserDTO userDTO) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 userDTO.getUsername(),
                 userDTO.getPassword(),
@@ -95,7 +94,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean isUsernameTaken (String username){
+    public boolean isUsernameTaken(String username) {
         User user = userRepository.findByUsername(username);
         return user != null;
     }
@@ -103,14 +102,28 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO getCurrentUser() {
         UserDTO userDTO = new UserDTO();
-        
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         User user = userRepository.findByUsername(authentication.getName());
-
-        // Check if user is found before copying properties
         if (user != null) {
             BeanUtils.copyProperties(user, userDTO);
+            if (Constant.ROLE_TEACHER.equals(user.getRole())) {
+                Teacher teacher = user.getTeacher();
+                if (teacher != null) {
+                    userDTO.setTeacherId(teacher.getTeacherId());
+                    userDTO.setDepartment(teacher.getDepartment());
+                }
+            }
+            else if (Constant.ROLE_STUDENT.equals(user.getRole())) {
+                // Nếu là sinh viên, lấy thông tin từ bảng Student
+                Optional<Student> studentOpt = studentRepository.findById(user.getUserId());
+                if (studentOpt.isPresent()) {
+                    Student student = studentOpt.get();
+                    // Copy thông tin sinh viên vào userDTO
+                    BeanUtils.copyProperties(student, userDTO);
+                }
+            }
         }
         return userDTO;
     }

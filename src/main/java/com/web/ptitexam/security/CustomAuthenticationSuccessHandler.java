@@ -1,4 +1,4 @@
-package com.web.ptitexam.config;
+package com.web.ptitexam.security;
 
 import com.web.ptitexam.constant.Constant;
 import jakarta.servlet.ServletException;
