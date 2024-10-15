@@ -4,7 +4,7 @@ import javax.swing.plaf.PanelUI;
 
 public class Constant {
 
-    //Gender
+    // Gender
     public static final String GENDER_MALE = "MALE";
     public static final String GENDER_FEMALE = "FEMALE";
 
@@ -16,7 +16,7 @@ public class Constant {
     // Absolute URL
     public static final String MAIN_DIR = "/ptit-exam";
 
-    //Redirect
+    // Redirect
     public static final String REDIRECT = "redirect:/";
 
     // Shared pages
@@ -35,4 +35,8 @@ public class Constant {
     // Student's page
     public static final String STUDENT_SUBDIR = "student";
     public static final String PAGE_STUDENT_CLASSROOM = STUDENT_SUBDIR + "/classroom";
+
+    // Exam page
+    public static final String EXAM_SUBDIR = "exam";
+    public static final String EXAM_CREATE_PAGE = EXAM_SUBDIR + "/create";
 }
