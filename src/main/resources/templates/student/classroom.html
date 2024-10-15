@@ -1,126 +1,136 @@
 <!DOCTYPE html>
 <html lang="vn, en" xmlns:th="http://www.w3.org/1999/xhtml">
-<head>
-  <title>Trang chủ</title>
-  <meta charset="UTF-8">
+  <head>
+    <title>Trang chủ</title>
+    <meta charset="UTF-8" />
 
-  <link rel="stylesheet" th:href="@{/css/class-style.css}">
-  <link rel="icon" th:href="@{/image/login/PTIT_LOGO.png}">
-</head>
-<body>
-<nav>
-  <div class="nav_function">
-    <img th:src="@{/image/homepage/PTIT_LOGO_WHITE.png}" alt="PTIT Logo">
-    <ul>
-      <li>Lớp học</li>
-      <li>Đề thi</li>
-      <li>Ôn tập</li>
-    </ul>
-  </div>
-  <div class="nav_user_info">
-    <div id="nav_username">
-      <h4 th:text="${userDTO.lastname} + ' ' + ${userDTO.firstname}">Tên người dùng</h4>
-      <h5 th:text="${userDTO.role == 'TEACHER' ? 'Giáo viên' :
+    <link rel="stylesheet" th:href="@{/css/class-style.css}" />
+    <link rel="icon" th:href="@{/image/login/PTIT_LOGO.png}" />
+  </head>
+  <body>
+    <nav>
+      <div class="nav_function">
+        <img th:src="@{/image/homepage/PTIT_LOGO_WHITE.png}" alt="PTIT Logo" />
+        <div>
+          <li>Lớp học</li>
+          <li>Đề thi</li>
+          <li>Ôn tập</li>
+        </div>
+      </div>
+      <div class="nav_user_info">
+        <div id="nav_username">
+          <h4 th:text="${userDTO.lastname} + ' ' + ${userDTO.firstname}">
+            Tên người dùng
+          </h4>
+          <h5
+            th:text="${userDTO.role == 'TEACHER' ? 'Giáo viên' :
          (userDTO.role == 'STUDENT' ? 'Sinh viên' :
          (userDTO.role == 'STUDENT' ? 'Quản trị viên' : 'null'
-      ))}">
-        Vai trò
-      </h5>
-    </div>
-    <div id="user_more_tools"> ▼
-      <ul class="user-menu">
-        <li><a href="#">Hồ sơ</a></li>
-        <li><a href="#">Hướng dẫn</a></li>
-        <li>
-          <form th:action="@{/logout}" method = "post" id = "logout_button">
-            <button type="submit">Đăng xuất</button>
-          </form>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
-<div class="content">
-
-  <div class="message">
-    <h2>Lớp học</h2>
-    <div th:if="${success}"  id="success-message">
-      <p th:text="${success}"></p>
-    </div>
-    <script>
-      // Kiểm tra nếu phần tử success-message tồn tại trên trang
-      window.addEventListener('load', function () {
-          var successMessage = document.getElementById("success-message");
-          if (successMessage) {
+      ))}"
+          >
+            Vai trò
+          </h5>
+        </div>
+        <div id="user_more_tools">
+          ▼
+          <ul class="user-menu">
+            <li><a href="#">Hồ sơ</a></li>
+            <li><a href="#">Hướng dẫn</a></li>
+            <li>
+              <form th:action="@{/logout}" method="post" id="logout_button">
+                <button type="submit">Đăng xuất</button>
+              </form>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="content">
+      <div class="message">
+        <h2>Lớp học</h2>
+        <div th:if="${success}" id="success-message">
+          <p th:text="${success}"></p>
+        </div>
+        <script>
+          // Kiểm tra nếu phần tử success-message tồn tại trên trang
+          window.addEventListener("load", function () {
+            var successMessage = document.getElementById("success-message");
+            if (successMessage) {
               // Ẩn thông báo sau 3 giây
               setTimeout(function () {
-                  successMessage.style.display = 'none';
+                successMessage.style.display = "none";
               }, 5000);
+            }
+          });
+        </script>
+      </div>
+
+      <div class="search_tool">
+        <input
+          type="text"
+          name="classroom"
+          id="search_input"
+          placeholder="Tìm kiếm lớp"
+        />
+        <select id="sort_method">
+          <option value="default">Sắp xếp</option>
+          <option value="az">A-Z</option>
+          <option value="za">Z-A</option>
+          <option value="newest">Mới nhất</option>
+          <option value="oldest">Cũ nhất</option>
+        </select>
+        <button id="red_button">+ Tham gia lớp mới</button>
+      </div>
+      <div class="info-table">
+        <table>
+          <thead>
+            <tr>
+              <th>STT</th>
+              <th>Mã lớp</th>
+              <th>Tên lớp</th>
+              <th>Giáo viên</th>
+              <th>Số đề thi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>ABDCE0</td>
+              <td>TƯ TƯỞNG HỒ CHÍ MINH</td>
+              <td>Đỗ Thị Diệu</td>
+              <td>0</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>RQASD1</td>
+              <td>PHÁP LUẬT ĐẠI CƯƠNG</td>
+              <td>Nguyễn Bá Phùng</td>
+              <td>0</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const moreTools = document.getElementById("user_more_tools");
+        const userMenu = moreTools.querySelector(".user-menu");
+
+        // Toggle menu khi bấm vào biểu tượng tam giác
+        moreTools.addEventListener("click", (event) => {
+          event.stopPropagation(); // Ngăn không để sự kiện bấm vào phần tử cha
+          userMenu.classList.toggle("show");
+        });
+
+        // Đóng menu khi bấm ra ngoài
+        document.addEventListener("click", (event) => {
+          if (!moreTools.contains(event.target)) {
+            // Kiểm tra nếu không bấm vào trong menu
+            userMenu.classList.remove("show"); // Xóa lớp 'show' để ẩn menu
           }
+        });
       });
     </script>
-  </div>
-
-  <div class="search_tool">
-    <input type="text" name="classroom" id="search_input" placeholder="Tìm kiếm lớp">
-    <select id="sort_method">
-      <option value="default">Sắp xếp</option>
-      <option value="az">A-Z</option>
-      <option value="za">Z-A</option>
-      <option value="newest">Mới nhất</option>
-      <option value="oldest">Cũ nhất</option>
-    </select>
-    <button id="red_button">+ Tham gia lớp mới</button>
-  </div>
-  <div class="info-table">
-    <table>
-      <thead>
-      <tr>
-        <th>STT</th>
-        <th>Mã lớp</th>
-        <th>Tên lớp</th>
-        <th>Giáo viên</th>
-        <th>Số đề thi</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td>1</td>
-        <td>ABDCE0</td>
-        <td>TƯ TƯỞNG HỒ CHÍ MINH</td>
-        <td>Đỗ Thị Diệu</td>
-        <td>0</td>
-      </tr>
-      <tr>
-        <td>2</td>
-        <td>RQASD1</td>
-        <td>PHÁP LUẬT ĐẠI CƯƠNG</td>
-        <td>Nguyễn Bá Phùng</td>
-        <td>0</td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-      const moreTools = document.getElementById('user_more_tools');
-      const userMenu = moreTools.querySelector('.user-menu');
-
-      // Toggle menu khi bấm vào biểu tượng tam giác
-      moreTools.addEventListener('click', (event) => {
-          event.stopPropagation(); // Ngăn không để sự kiện bấm vào phần tử cha
-          userMenu.classList.toggle('show');
-      });
-
-      // Đóng menu khi bấm ra ngoài
-      document.addEventListener('click', (event) => {
-          if (!moreTools.contains(event.target)) { // Kiểm tra nếu không bấm vào trong menu
-              userMenu.classList.remove('show'); // Xóa lớp 'show' để ẩn menu
-          }
-      });
-  });
-</script>
-</body>
+  </body>
 </html>

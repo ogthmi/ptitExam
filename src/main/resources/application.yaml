@@ -4,8 +4,7 @@ server:
     context-path: /ptit-exam
 
 spring:
-  application:
-    name=PTIT-Exam
+  application: name=PTIT-Exam
   security:
     user:
       name: admin

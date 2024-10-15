@@ -34,14 +34,16 @@ nav {
 
     display: inline-flex;
 
-    ul {
-        margin-left: -10px;
+    div {
+        margin-left: 40px;
         list-style-type: none;
         display: flex;
     }
 
     li {
         margin-right: 35px;
+        line-height: 50px;
+        cursor: pointer;
     }
     li:hover{
         text-decoration: underline;
@@ -55,11 +57,13 @@ nav {
     #nav_username {
         h4 {
             margin: 0;
+            font-size: 18px;
             font-weight: 600;
         }
 
         h5 {
             font-weight: normal;
+            font-size: 15px;
             margin: 0;
             text-align: right;
         }
@@ -237,4 +241,8 @@ table {
 
         cursor:pointer;
     }
+}
+
+.title-create{
+    color: var(--gray-text);
 }

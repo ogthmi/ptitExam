@@ -1,9 +1,11 @@
 package com.web.ptitexam.entity;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 
 @Entity
-@Table (name = "teachers")
+@Table(name = "teachers")
 public class Teacher {
     @Id
     private String teacherId;
@@ -12,6 +14,9 @@ public class Teacher {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "userId")
     private User user;
+
+    @OneToMany(mappedBy = "teacher")
+    private List<Classroom> classrooms;
 
     public String getTeacherId() {
         return teacherId;

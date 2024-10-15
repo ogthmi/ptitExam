@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
-@Table (name = "users")
+@Table(name = "users")
 public class User {
     @Id
 
@@ -43,7 +43,8 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Student student;
 
-    public User(){}
+    public User() {
+    }
 
     public String getUserId() {
         return userId;
@@ -132,6 +133,5 @@ public class User {
     public void setStudent(Student student) {
         this.student = student;
     }
+
 }
-
-

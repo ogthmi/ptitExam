@@ -1,10 +1,11 @@
 package com.web.ptitexam.entity;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 
-
 @Entity
-@Table (name = "students")
+@Table(name = "students")
 public class Student {
     @Id
     private String studentId;
@@ -14,6 +15,17 @@ public class Student {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "userId")
     private User user;
+
+    @ManyToMany(mappedBy = "students")
+    private List<Classroom> classrooms;
+
+    public List<Classroom> getClassrooms() {
+        return classrooms;
+    }
+
+    public void setClassrooms(List<Classroom> classrooms) {
+        this.classrooms = classrooms;
+    }
 
     public String getStudentId() {
         return studentId;

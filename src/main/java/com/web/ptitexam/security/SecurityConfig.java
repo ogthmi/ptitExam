@@ -1,6 +1,5 @@
 package com.web.ptitexam.security;
 
-
 import com.web.ptitexam.constant.Constant;
 import com.web.ptitexam.service.UserService;
 
@@ -19,7 +18,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig{
+public class SecurityConfig {
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -41,36 +40,35 @@ public class SecurityConfig{
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests(authorize -> authorize
-                                .requestMatchers("/css/**", "/image/**", "/register")
-                                .permitAll()
 
-                                .requestMatchers("/teacher/**").hasAuthority(Constant.ROLE_TEACHER)
-                                .requestMatchers("/student/**").hasAuthority(Constant.ROLE_STUDENT)
-                                .anyRequest().authenticated()
-                )
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/**", "/css/**", "/image/**", "/register")
+                        .permitAll()
+
+                        // .requestMatchers("/teacher/**").hasAuthority(Constant.ROLE_TEACHER)
+                        // .requestMatchers("/student/**").hasAuthority(Constant.ROLE_STUDENT)
+                        .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/" + Constant.PAGE_LOGIN)
                         .successHandler(customAuthenticationSuccessHandler())
                         .failureHandler(customAuthenticationFailureHandler())
                         .permitAll()
-                        
+
                 )
                 .exceptionHandling(ex -> ex.accessDeniedPage("/access-deny"))
                 .logout(logout -> logout
                         .logoutUrl("/logout") // URL để đăng xuất
-                        .logoutSuccessUrl("/" + Constant.PAGE_LOGIN + "?logout") // Trang chuyển hướng sau khi đăng xuất thành công
+                        .logoutSuccessUrl("/" + Constant.PAGE_LOGIN + "?logout") // Trang chuyển hướng sau khi đăng xuất
+                                                                                 // thành công
                         .invalidateHttpSession(true) // Hủy phiên khi đăng xuất
                         .clearAuthentication(true) // Xóa thông tin xác thực
                         .deleteCookies("JSESSIONID") // Xóa cookie JSESSIONID
-                        .permitAll()
-                )
+                        .permitAll())
                 .sessionManagement(session -> session
                         // Cấu hình chính sách tạo session ở đây
-                        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
-                );
+                        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS));
         return http.build();
     }
 

@@ -38,9 +38,9 @@ public class UserServiceImpl implements UserService {
     private HttpServletRequest request;
 
     public UserServiceImpl(UserRepository userRepository,
-                           StudentRepository studentRepository,
-                           TeacherRepository teacherRepository,
-                           BCryptPasswordEncoder passwordEncoder) {
+            StudentRepository studentRepository,
+            TeacherRepository teacherRepository,
+            BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.studentRepository = studentRepository;
         this.teacherRepository = teacherRepository;
@@ -85,8 +85,7 @@ public class UserServiceImpl implements UserService {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 userDTO.getUsername(),
                 userDTO.getPassword(),
-                List.of(new SimpleGrantedAuthority(userDTO.getRole()))
-        );
+                List.of(new SimpleGrantedAuthority(userDTO.getRole())));
         System.out.println(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         HttpSession session = request.getSession();
@@ -114,13 +113,17 @@ public class UserServiceImpl implements UserService {
                 if (teacher != null) {
                     BeanUtils.copyProperties(teacher, userDTO);
                 }
-            }
-            else if (Constant.ROLE_STUDENT.equals(user.getRole())) {
+            } else if (Constant.ROLE_STUDENT.equals(user.getRole())) {
                 Student student = user.getStudent();
                 if (student != null)
                     BeanUtils.copyProperties(student, userDTO);
-                }
             }
+        }
         return userDTO;
+    }
+
+    @Override
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 }
