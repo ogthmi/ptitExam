@@ -19,4 +19,6 @@ public interface StudentRepository extends JpaRepository<Student, String> {
 
     Page<Student> findByClassrooms(Classroom classroom, Pageable pageable);
 
+    Page<Student> findByClassroomsAndStudentIdContaining(Classroom classroom, String search, Pageable pageable);
+
 }

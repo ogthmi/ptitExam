@@ -49,8 +49,11 @@ public class ClassroomServiceImpl implements ClassroomService {
     }
 
     @Override
-    public Page<Classroom> findByTeacher(Teacher teacher, Pageable pageable) {
-        return classroomRepository.findByTeacher(teacher, pageable);
+    public Page<Classroom> findByTeacher(Teacher teacher, String search, Pageable pageable) {
+        if (search.equals("")) {
+            return classroomRepository.findByTeacher(teacher, pageable);
+        }
+        return classroomRepository.findByTeacherAndClassNameContaining(teacher, search, pageable);
     }
 
     @Override

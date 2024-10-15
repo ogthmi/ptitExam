@@ -16,6 +16,8 @@ public interface ClassroomRepository extends JpaRepository<Classroom, String> {
 
     Page<Classroom> findByTeacher(Teacher teacher, Pageable pageable);
 
+    Page<Classroom> findByTeacherAndClassNameContaining(Teacher teacher, String className, Pageable pageable);
+
     Classroom findByClassId(String classId);
 
     Boolean existsByClassNameAndTeacher(String className, Teacher teacher);

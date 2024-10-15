@@ -10,5 +10,5 @@ import com.web.ptitexam.entity.Teacher;
 public interface StudentService {
     Student findByStudentId(String studentId);
 
-    Page<Student> findByClassrooms(Classroom classroom, Pageable pageable);
+    Page<Student> findByClassrooms(Classroom classroom, String search, Pageable pageable);
 }

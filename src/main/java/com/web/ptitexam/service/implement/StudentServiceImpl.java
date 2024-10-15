@@ -23,7 +23,12 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Page<Student> findByClassrooms(Classroom classroom, Pageable pageable) {
-        return studentRepository.findByClassrooms(classroom, pageable);
+    public Page<Student> findByClassrooms(Classroom classroom, String search, Pageable pageable) {
+
+        if (search.equals("")) {
+            return studentRepository.findByClassrooms(classroom, pageable);
+        }
+
+        return studentRepository.findByClassroomsAndStudentIdContaining(classroom, search.toLowerCase(), pageable);
     }
 }

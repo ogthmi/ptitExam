@@ -3,7 +3,13 @@ package com.web.ptitexam.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.web.ptitexam.dto.ClassroomDTO;
+import com.web.ptitexam.dto.StudentDTO;
 
 @Entity
 @Table(name = "users")
@@ -41,6 +47,7 @@ public class User {
     private Teacher teacher;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore()
     private Student student;
 
     public User() {
@@ -132,6 +139,24 @@ public class User {
 
     public void setStudent(Student student) {
         this.student = student;
+    }
+
+    public StudentDTO convertToStudentDTO() {
+        StudentDTO studentDTO = new StudentDTO();
+        studentDTO.setStudentId(this.student.getStudentId());
+        studentDTO.setName(this.firstname + " " + this.lastname);
+        studentDTO.setMajor(this.student.getMajor());
+        studentDTO.setClassName(this.student.getClassName());
+
+        // Convert list of Classroom to list of ClassroomDTO
+        List<ClassroomDTO> tmp = this.student.getClassrooms().stream().map(classroom -> {
+            ClassroomDTO classroomDTO = new ClassroomDTO();
+            classroomDTO.setClassName(classroom.getClassName());
+            return classroomDTO;
+        }).collect(Collectors.toList());
+
+        studentDTO.setClassrooms(tmp);
+        return studentDTO;
     }
 
 }

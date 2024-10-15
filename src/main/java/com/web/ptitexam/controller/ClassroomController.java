@@ -19,6 +19,7 @@ import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,29 +48,69 @@ public class ClassroomController {
     @GetMapping(value = Constant.PAGE_TEACHER_CLASSROOM)
     public String showTeacherClassroom(Model model,
             @RequestParam(value = "current", defaultValue = "1") int current,
-            @RequestParam(value = "pageSize", defaultValue = "5") int pageSize) {
-        UserDTO currentUser = userService.getCurrentUser();
-        User user = userService.findByUsername(currentUser.getUsername());
+            @RequestParam(value = "pageSize", defaultValue = "5") int pageSize,
+            @RequestParam(value = "sort", defaultValue = "") String sort,
+            @RequestParam(value = "search", defaultValue = "") String search,
+            @RequestParam(value = "key", defaultValue = "") String key) {
 
-        Pageable pageable = PageRequest.of(current - 1, pageSize);
-        Page<Classroom> classroomPage = classroomService.findByTeacher(user.getTeacher(), pageable);
+        try {
 
-        model.addAttribute("userDTO", currentUser);
-        model.addAttribute("classrooms", classroomPage.getContent());
+            UserDTO currentUser = userService.getCurrentUser();
+            User user = userService.findByUsername(currentUser.getUsername());
 
-        // trang hiện tại
-        model.addAttribute("currentPage", current);
+            String[] keyList = { "className", "classCreatedAt", "classId" };
 
-        // số lượng items mỗi trang
-        model.addAttribute("pageSize", pageSize);
+            boolean isValidKey = false;
 
-        // tổng số trang
-        model.addAttribute("totalPages", classroomPage.getTotalPages());
+            for (String k : keyList) {
+                if (k.equals(key)) {
+                    isValidKey = true;
+                    break;
+                }
+            }
 
-        // tổng số items
-        model.addAttribute("totalItems", classroomPage.getTotalElements());
+            if ((!sort.equals("az") && !sort.equals("za")) || sort.isEmpty()) {
+                sort = "default";
+                key = "default";
+            }
+            if (key == null || key.isEmpty() || !isValidKey) {
+                key = "default";
+                sort = "default";
+            }
 
-        return Constant.PAGE_TEACHER_CLASSROOM;
+            model.addAttribute("sort", sort);
+            model.addAttribute("search", search);
+            model.addAttribute("key", key);
+
+            Pageable pageable;
+            if ("az".equals(sort) && key != null && !key.isEmpty()) {
+                pageable = PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.ASC, key));
+            } else if ("za".equals(sort) && key != null && !key.isEmpty()) {
+                pageable = PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.DESC, key));
+            } else {
+                pageable = PageRequest.of(current - 1, pageSize);
+            }
+            Page<Classroom> classroomPage = classroomService.findByTeacher(user.getTeacher(), search, pageable);
+
+            model.addAttribute("userDTO", currentUser);
+            model.addAttribute("classrooms", classroomPage.getContent());
+
+            // trang hiện tại
+            model.addAttribute("currentPage", current);
+
+            // số lượng items mỗi trang
+            model.addAttribute("pageSize", pageSize);
+
+            // tổng số trang
+            model.addAttribute("totalPages", classroomPage.getTotalPages());
+
+            // tổng số items
+            model.addAttribute("totalItems", classroomPage.getTotalElements());
+
+            return Constant.PAGE_TEACHER_CLASSROOM;
+        } catch (Exception e) {
+            return Constant.PAGE_LOGIN;
+        }
     }
 
     @GetMapping(value = Constant.PAGE_STUDENT_CLASSROOM)
@@ -82,7 +123,10 @@ public class ClassroomController {
     @GetMapping(value = Constant.PAGE_TEACHER_CLASSROOM + "/update/{id}")
     public String showUpdateClassroom(Model model, @PathVariable("id") String id,
             @RequestParam(value = "current", defaultValue = "1") int current,
-            @RequestParam(value = "pageSize", defaultValue = "5") int pageSize) {
+            @RequestParam(value = "pageSize", defaultValue = "5") int pageSize,
+            @RequestParam(value = "sort", defaultValue = "") String sort,
+            @RequestParam(value = "search", defaultValue = "") String search,
+            @RequestParam(value = "key", defaultValue = "") String key) {
         try {
             UserDTO currentUser = userService.getCurrentUser();
             Classroom classroom = classroomService.findByClassId(id);
@@ -91,8 +135,43 @@ public class ClassroomController {
                 return "redirect:/teacher/classroom";
             }
 
-            Pageable pageable = PageRequest.of(current - 1, pageSize);
-            Page<Student> studentPage = studentService.findByClassrooms(classroom, pageable);
+            String[] keyList = { "studentId", "name", "major", "className" };
+
+            boolean isValidKey = false;
+
+            for (String k : keyList) {
+                if (k.equals(key)) {
+                    isValidKey = true;
+                    break;
+                }
+            }
+
+            if ((!sort.equals("az") && !sort.equals("za")) || sort.isEmpty()) {
+                sort = "default";
+                key = "default";
+            }
+            if (key == null || key.isEmpty() || !isValidKey) {
+                key = "default";
+                sort = "default";
+            }
+
+            Pageable pageable;
+
+            if (key != null && sort != null) {
+                if ("az".equals(sort) && key != null && !key.isEmpty()) {
+                    pageable = PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.ASC, key));
+                } else {
+                    pageable = PageRequest.of(current - 1, pageSize);
+                }
+
+                if ("za".equals(sort) && key != null && !key.isEmpty()) {
+                    pageable = PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.DESC, key));
+                }
+            } else {
+                pageable = PageRequest.of(current - 1, pageSize);
+            }
+
+            Page<Student> studentPage = studentService.findByClassrooms(classroom, search, pageable);
 
             model.addAttribute("userDTO", currentUser);
             model.addAttribute("classroom", classroom);
@@ -103,6 +182,10 @@ public class ClassroomController {
             // số lượng items mỗi trang
             model.addAttribute("pageSize", pageSize);
 
+            model.addAttribute("sort", sort);
+            model.addAttribute("key", key);
+            model.addAttribute("search", search);
+
             // tổng số trang
             model.addAttribute("totalPages", studentPage.getTotalPages());
 
@@ -111,7 +194,8 @@ public class ClassroomController {
 
             return Constant.PAGE_TEACHER_UPDATE_CLASSROOM;
         } catch (Exception e) {
-            return "redirect:/login";
+            System.out.println(e);
+            return "redirect:/teacher/classroom";
         }
 
     }
@@ -119,6 +203,9 @@ public class ClassroomController {
     @PostMapping(Constant.PAGE_TEACHER_CLASSROOM + "/create")
     public String createClassroom(@RequestParam("name") String name, Model model,
             RedirectAttributes redirectAttributes) {
+
+        System.out.println(SecurityContextHolder
+                .getContext().getAuthentication().getPrincipal());
 
         org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) SecurityContextHolder
                 .getContext().getAuthentication().getPrincipal();
@@ -131,7 +218,6 @@ public class ClassroomController {
 
         ClassroomDTO classroomDto = new ClassroomDTO();
         classroomDto.setClassName(name);
-        System.out.println("Classroom name: " + classroomDto.getClassName());
         classroomService.createClassroom(classroomDto);
         redirectAttributes.addFlashAttribute("success", "Tạo mới lớp học thành công.");
         return "redirect:/teacher/classroom";

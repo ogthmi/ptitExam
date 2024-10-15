@@ -12,7 +12,7 @@ import com.web.ptitexam.entity.Teacher;
 public interface ClassroomService {
     void createClassroom(ClassroomDTO classroomDTO);
 
-    Page<Classroom> findByTeacher(Teacher teacher, Pageable pageable);
+    Page<Classroom> findByTeacher(Teacher teacher, String search, Pageable pageable);
 
     List<Classroom> findAll();
 

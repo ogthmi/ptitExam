@@ -4,7 +4,8 @@ server:
     context-path: /ptit-exam
 
 spring:
-  application: name=PTIT-Exam
+  application:
+    name: PTIT-Exam
   security:
     user:
       name: admin
@@ -13,7 +14,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: "jdbc:mysql://localhost:3306/ptit-exam"
     username: root
-    password: 089908
+    password: 123456
   jpa:
     hibernate:
       ddl-auto: update

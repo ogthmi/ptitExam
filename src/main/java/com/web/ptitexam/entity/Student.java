@@ -2,6 +2,8 @@ package com.web.ptitexam.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -14,6 +16,7 @@ public class Student {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "userId")
+    @JsonIgnore()
     private User user;
 
     @ManyToMany(mappedBy = "students")

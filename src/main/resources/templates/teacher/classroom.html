@@ -19,8 +19,8 @@
       <div class="nav_function">
         <img th:src="@{/image/homepage/PTIT_LOGO_WHITE.png}" alt="PTIT Logo" />
         <div>
-          <li>Lớp học</li>
-          <li>Đề thi</li>
+          <a th:href="@{/teacher/classroom}">Lớp học</a>
+          <a>Đề thi</a>
         </div>
       </div>
       <div class="nav_user_info">
@@ -85,29 +85,57 @@
             }
           });
         </script>
-      </div>
 
-      <div class="search_tool">
-        <input
-          type="text"
-          name="classroom"
-          id="search_input"
-          placeholder="Tìm kiếm lớp"
-        />
-        <select id="sort_method">
-          <option value="default">Sắp xếp</option>
-          <option value="az">A-Z</option>
-          <option value="za">Z-A</option>
-          <option value="newest">Mới nhất</option>
-          <option value="oldest">Cũ nhất</option>
-        </select>
-        <a
-          data-toggle="modal"
-          data-target="#create-classroom"
-          href="/ptit-exam/teacher/classroom/create"
-          id="red_button"
-          >+ Tạo lớp mới</a
-        >
+        <div class="search_tool">
+          <input
+            type="text"
+            name="classroom"
+            id="search_input"
+            th:value="${search}"
+            placeholder="Tìm kiếm lớp theo tên"
+          />
+          <a id="red_button" class="search-student">Tìm kiếm</a>
+        </div>
+
+        <div class="sort-menu">
+          <select id="sort_order">
+            <option value="default" th:selected="${sort == 'default'}">
+              Sắp xếp
+            </option>
+            <option value="az" th:selected="${sort == 'az'}">A-Z</option>
+            <option value="za" th:selected="${sort == 'za'}">Z-A</option>
+          </select>
+
+          <select id="sort_criteria">
+            <option value="default" th:selected="${key == 'default'}">
+              Tiêu chí
+            </option>
+            <option value="classId" th:selected="${key == 'classId'}">
+              Mã Lớp
+            </option>
+            <option value="className" th:selected="${key == 'className'}">
+              Tên lớp
+            </option>
+            <option
+              value="classCreatedAt"
+              th:selected="${key == 'classCreatedAt'}"
+            >
+              Ngày tạo
+            </option>
+          </select>
+          <a id="red_button" class="sort-student">Áp dụng</a>
+        </div>
+
+        <div class="add-class-wrapper">
+          <a
+            data-toggle="modal"
+            data-target="#create-classroom"
+            href="/ptit-exam/teacher/classroom/create"
+            id="red_button"
+            class="add-classroom"
+            >+ Tạo lớp mới</a
+          >
+        </div>
       </div>
       <div class="info-table">
         <table>
@@ -344,6 +372,57 @@
               form.submit();
             });
           });
+        });
+
+        // Sắp xếp sinh viên
+
+        const sortButton = document.querySelector(".sort-student");
+        const sortOrderSelect = document.getElementById("sort_order");
+        const sortCriteriaSelect = document.getElementById("sort_criteria");
+
+        sortButton.addEventListener("click", function () {
+          const sortOrder = sortOrderSelect.value;
+          const sortCriteria = sortCriteriaSelect.value;
+
+          let queryParams = new URLSearchParams(window.location.search);
+
+          if (sortOrder !== "default" && sortCriteria !== "default") {
+            queryParams.set("sort", sortOrder);
+            queryParams.set("key", sortCriteria);
+          } else {
+            queryParams.delete("sort");
+            queryParams.delete("key");
+          }
+
+          window.location.search = queryParams.toString();
+        });
+
+        // Tìm kiếm lớp học
+        const searchButton = document.querySelector(".search-student");
+        const searchInput = document.getElementById("search_input");
+
+        searchButton.addEventListener("click", function () {
+          const searchInput = document.getElementById("search_input");
+          const searchValue = searchInput.value;
+
+          let queryParams = new URLSearchParams(window.location.search);
+
+          queryParams.delete("current");
+          queryParams.delete("pageSize");
+
+          if (searchValue) {
+            queryParams.set("search", searchValue);
+          } else {
+            queryParams.delete("search");
+          }
+
+          window.location.search = queryParams.toString();
+        });
+
+        searchInput.addEventListener("keydown", function (e) {
+          if (e.key === "Enter") {
+            searchButton.click();
+          }
         });
       });
     </script>
