@@ -1,5 +1,11 @@
 package com.web.ptitexam.service;
 
-public class ExamService {
-    
+import com.web.ptitexam.dto.ExamDTO;
+
+public interface ExamService {
+
+    void createExam(ExamDTO ExamDTO);
+
+    void getCurrentExamInfo();
+
 }
