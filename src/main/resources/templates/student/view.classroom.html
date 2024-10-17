@@ -19,7 +19,7 @@
     <link rel="stylesheet" th:href="@{/css/class-style.css}" />
     <link rel="icon" th:href="@{/image/login/PTIT_LOGO.png}" />
 
-    <title>Cập nhật lớp học</title>
+    <title>Chi tiết lớp học</title>
   </head>
 
   <body>
@@ -27,8 +27,9 @@
       <div class="nav_function">
         <img th:src="@{/image/homepage/PTIT_LOGO_WHITE.png}" alt="PTIT Logo" />
         <div>
-          <a th:href="@{/teacher/classroom}">Lớp học</a>
+          <a th:href="@{/student/classroom}">Lớp học</a>
           <a>Đề thi</a>
+          <a>Ôn tập</a>
         </div>
       </div>
       <div class="nav_user_info">
@@ -38,9 +39,9 @@
           </h4>
           <h5
             th:text="${userDTO.role == 'TEACHER' ? 'Giáo viên' :
-               (userDTO.role == 'STUDENT' ? 'Sinh viên' :
-               (userDTO.role == 'STUDENT' ? 'Quản trị viên' : 'null'
-            ))}"
+         (userDTO.role == 'STUDENT' ? 'Sinh viên' :
+         (userDTO.role == 'STUDENT' ? 'Quản trị viên' : 'null'
+      ))}"
           >
             Vai trò
           </h5>
@@ -48,7 +49,7 @@
         <div id="user_more_tools">
           ▼
           <ul class="user-menu">
-            <li><a th:href="@{/user-info}">Hồ sơ</a></li>
+            <li><a href="#">Hồ sơ</a></li>
             <li><a href="#">Hướng dẫn</a></li>
             <li>
               <form th:action="@{/logout}" method="post" id="logout_button">
@@ -61,25 +62,6 @@
     </nav>
     
     <div class="container">
-      <div class="mt-4">
-        <h2 class="text-center title-create">Chỉnh sửa lớp học</h2>
-        <form
-          th:action="@{/teacher/classroom/update/{id}(id=${classroom.classId})}"
-          method="post"
-        >
-          <div class="form-group">
-            <label for="exampleInputEmail1">Tên lớp học</label>
-            <input
-              type="text"
-              class="form-control"
-              th:value="${classroom.className}"
-              name="name"
-            />
-          </div>
-          <button type="submit" class="btn btn-danger">Cập nhật lớp</button>
-        </form>
-      </div>
-
       <div class="mt-4">
         <h2 class="text-center title-create">
           Danh sách Sinh Viên Lớp
@@ -136,8 +118,8 @@
               <option value="az" th:selected="${sort == 'az'}">A-Z</option>
               <option value="za" th:selected="${sort == 'za'}">Z-A</option>
             </select>
-        
-            <select style="margin: 0 10px" id="sort_criteria">
+      
+            <select style="margin:0 10px" id="sort_criteria">
                 <option value="default" th:selected="${key == 'default'}">Tiêu chí</option>
                 <option value="studentId" th:selected="${key == 'studentId'}">Mã sinh viên</option>
                 <option value="className" th:selected="${key == 'className'}">Lớp</option>
@@ -147,14 +129,6 @@
           </div>
 
         <div class="info-table">
-          <button
-            data-toggle="modal"
-            data-target="#add-student"
-            type="button"
-            class="btn btn-danger mb-3"
-          >
-            Thêm mới sinh viên
-          </button>
           <table>
             <thead>
               <tr>
@@ -163,7 +137,6 @@
                 <th>Họ tên</th>
                 <th>Chuyên ngành</th>
                 <th>Lớp</th>
-                <th>Thao tác</th>
               </tr>
             </thead>
             <tbody>
@@ -179,13 +152,6 @@
                 <td th:text="${student.user.firstname} + ${student.user.lastname}"></td>
                 <td th:text="${student.major}"></td>
                 <td th:text="${student.className}"></td>
-                <td>
-                  <a
-                    th:href="@{/teacher/classroom/remove-student/{classId}/{studentId}(classId=${classroom.classId}, studentId=${student.studentId})}"
-                    class="btn btn-danger"
-                    >Xóa</a
-                  >
-                </td>
               </tr>
             </tbody>
           </table>
@@ -202,7 +168,7 @@
               <!-- Previous Button -->
               <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
                   <a class="page-link"
-                    th:href="@{/teacher/classroom/update/{id}(id=${classroom.classId}, current=${currentPage - 1}, pageSize=${pageSize})}"
+                    th:href="@{/student/classroom/view/{id}(id=${classroom.classId}, current=${currentPage - 1}, pageSize=${pageSize})}"
                     aria-label="Previous">
                       <span aria-hidden="true">&laquo;</span>
                   </a>
@@ -211,81 +177,20 @@
               <!-- Page Numbers -->
               <li th:each="i : ${#numbers.sequence(1, totalPages)}" class="page-item" th:classappend="${i == currentPage} ? 'active'">
                   <a class="page-link"
-                    th:href="@{/teacher/classroom/update/{id}(id=${classroom.classId}, current=${i}, pageSize=${pageSize})}"
+                    th:href="@{/student/classroom/view/{id}(id=${classroom.classId}, current=${i}, pageSize=${pageSize})}"
                     th:text="${i}"></a>
               </li>
           
               <!-- Next Button -->
               <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
                   <a class="page-link"
-                    th:href="@{/teacher/classroom/update/{id}(id=${classroom.classId}, current=${currentPage + 1}, pageSize=${pageSize})}"
+                    th:href="@{/student/classroom/view/{id}(id=${classroom.classId}, current=${currentPage + 1}, pageSize=${pageSize})}"
                     aria-label="Next">
                       <span aria-hidden="true">&raquo;</span>
                   </a>
               </li>
           </ul>
         </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Modal -->
-    <div
-      class="modal fade"
-      id="add-student"
-      data-backdrop="static"
-      data-keyboard="false"
-      tabindex="-1"
-      aria-labelledby="staticBackdropLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="staticBackdropLabel">
-              Thêm mới sinh viên
-            </h5>
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form th:action="@{/teacher/classroom/add-student}" method="post">
-              <div class="form-group">
-                <label for="studentId">Mã Sinh Viên</label>
-                <input
-                    type="text"
-                    class="form-control"
-                    id="studentId-inp"
-                    name="studentId"
-                    required
-                />
-                <div class="dropdown-menu" id="student-dropdown"></div>
-                <input
-                    type="hidden"
-                    name="classId"
-                    th:value="${classroom.classId}"
-                />
-            </div>
-              <div class="modal-footer">
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  data-dismiss="modal"
-                >
-                  Đóng
-                </button>
-                <button type="submit" class="btn btn-danger">
-                  Thêm sinh viên
-                </button>
-              </div>
-            </form>
-          </div>
         </div>
       </div>
     </div>
@@ -308,60 +213,6 @@
           // Kiểm tra nếu không bấm vào trong menu
           userMenu.classList.remove("show"); // Xóa lớp 'show' để ẩn menu
         }
-      });
-
-      // Tìm kiếm sinh viên
-
-      const studentInput = document.getElementById('studentId-inp');
-      const dropdown = document.getElementById('student-dropdown');
-
-      let debounceTimeout;
-
-      studentInput.addEventListener('input', function () {
-          clearTimeout(debounceTimeout);
-          debounceTimeout = setTimeout(() => {
-              const query = studentInput.value.trim();
-              if (query) {
-                  fetch(`/ptit-exam/api/student/search?id=${query}`)
-                      .then(response => response.json())
-                      .then(data => {
-                          dropdown.innerHTML = '';
-                          if (data.length) {
-                              data.forEach(student => {
-                                  const item = document.createElement('a');
-                                  item.classList.add('dropdown-item', 'text-danger');
-                                  item.href = '#';
-                                  item.textContent = student.studentId + " - " + student.name;
-                                  
-                                  item.addEventListener('click', function () {
-                                      studentInput.value = student.studentId;
-                                      dropdown.classList.remove('show');
-                                  });
-                                  dropdown.appendChild(item);
-                              });
-                              dropdown.classList.add('show');
-                          } else {
-                              const noResultItem = document.createElement('div');
-                              noResultItem.classList.add('dropdown-item', 'text-muted');
-                              noResultItem.textContent = 'Không tìm thấy sinh viên nào có mã tương ứng';
-                              dropdown.appendChild(noResultItem);
-                              dropdown.classList.add('show');
-                          }
-                      })
-                      .catch(error => {
-                          
-                          dropdown.classList.remove('show');
-                      });
-              } else {
-                  dropdown.classList.remove('show');
-              }
-          }, 200); // 300ms debounce time
-      });
-
-      document.addEventListener('click', function (e) {
-          if (!studentInput.contains(e.target) && !dropdown.contains(e.target)) {
-              dropdown.classList.remove('show');
-          }
       });
 
       // Sắp xếp sinh viên

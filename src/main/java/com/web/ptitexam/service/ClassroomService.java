@@ -14,6 +14,8 @@ public interface ClassroomService {
 
     Page<Classroom> findByTeacher(Teacher teacher, String search, Pageable pageable);
 
+    Page<Classroom> findByStudentsStudentId(String studentId, String search, Pageable pageable);
+
     List<Classroom> findAll();
 
     Classroom findByClassId(String classId);
@@ -27,4 +29,6 @@ public interface ClassroomService {
     void addStudentToClassroom(String classId, String studentId);
 
     void removeStudentFromClassroom(String classId, String studentId);
+
+    void leaveClassroom(String classId);
 }

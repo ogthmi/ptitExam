@@ -94,47 +94,31 @@
             th:value="${search}"
             placeholder="Tìm kiếm lớp theo tên"
           />
-          <a id="red_button" class="search-student">Tìm kiếm</a>
-        </div>
+          <a hidden id="red_button" class="search-student">Tìm kiếm</a>
 
-        <div class="sort-menu">
-          <select id="sort_order">
+          <select id="sort_criteria">
             <option value="default" th:selected="${sort == 'default'}">
               Sắp xếp
             </option>
-            <option value="az" th:selected="${sort == 'az'}">A-Z</option>
-            <option value="za" th:selected="${sort == 'za'}">Z-A</option>
+            <option value="az" th:selected="${sort == 'az'}">A - Z</option>
+            <option value="za" th:selected="${sort == 'za'}">Z - A</option>
+            <option value="newest" th:selected="${sort == 'newest'}">
+              Mới nhất
+            </option>
+            <option value="oldest" th:selected="${sort == 'oldest'}">
+              Cũ nhất
+            </option>
           </select>
-
-          <select id="sort_criteria">
-            <option value="default" th:selected="${key == 'default'}">
-              Tiêu chí
-            </option>
-            <option value="classId" th:selected="${key == 'classId'}">
-              Mã Lớp
-            </option>
-            <option value="className" th:selected="${key == 'className'}">
-              Tên lớp
-            </option>
-            <option
-              value="classCreatedAt"
-              th:selected="${key == 'classCreatedAt'}"
+          <div class="add-class-wrapper">
+            <a
+              data-toggle="modal"
+              data-target="#create-classroom"
+              id="red_button"
+              class="add-classroom"
+              >+ Tạo lớp mới</a
             >
-              Ngày tạo
-            </option>
-          </select>
-          <a id="red_button" class="sort-student">Áp dụng</a>
-        </div>
-
-        <div class="add-class-wrapper">
-          <a
-            data-toggle="modal"
-            data-target="#create-classroom"
-            href="/ptit-exam/teacher/classroom/create"
-            id="red_button"
-            class="add-classroom"
-            >+ Tạo lớp mới</a
-          >
+          </div>
+          <a id="red_button" hidden class="sort-student">Áp dụng</a>
         </div>
       </div>
       <div class="info-table">
@@ -145,6 +129,7 @@
               <th>Mã lớp</th>
               <th>Tên lớp</th>
               <th>Ngày tạo</th>
+              <th>Giờ tạo</th>
               <th>Số học sinh</th>
               <th>Số đề thi</th>
               <th>Thao tác</th>
@@ -163,6 +148,9 @@
               <td th:text="${classroom.className}"></td>
               <td
                 th:text="${#dates.format(classroom.classCreatedAt, 'dd/MM/yyyy')}"
+              ></td>
+              <td
+                th:text="${#dates.format(classroom.classCreatedAt, 'HH:mm:ss')}"
               ></td>
               <td th:text="${classroom.students.size()}"></td>
               <td>0</td>
@@ -377,23 +365,17 @@
         // Sắp xếp sinh viên
 
         const sortButton = document.querySelector(".sort-student");
-        const sortOrderSelect = document.getElementById("sort_order");
         const sortCriteriaSelect = document.getElementById("sort_criteria");
 
-        sortButton.addEventListener("click", function () {
-          const sortOrder = sortOrderSelect.value;
-          const sortCriteria = sortCriteriaSelect.value;
+        sortCriteriaSelect.addEventListener("change", function () {
+          const selectedValue = this.value;
+          const url = new URL(window.location.href);
+          const queryParams = url.searchParams;
 
-          let queryParams = new URLSearchParams(window.location.search);
+          // Cập nhật tham số sort với giá trị được chọn
+          queryParams.set("sort", selectedValue);
 
-          if (sortOrder !== "default" && sortCriteria !== "default") {
-            queryParams.set("sort", sortOrder);
-            queryParams.set("key", sortCriteria);
-          } else {
-            queryParams.delete("sort");
-            queryParams.delete("key");
-          }
-
+          // Cập nhật URL
           window.location.search = queryParams.toString();
         });
 

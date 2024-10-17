@@ -12,9 +12,9 @@ spring:
       password: admin
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: "jdbc:mysql://localhost:3306/ptit-exam"
+    url: "jdbc:mysql://localhost:3306/ptit"
     username: root
-    password: 123456
+    password: Ta0936896668
   jpa:
     hibernate:
       ddl-auto: update

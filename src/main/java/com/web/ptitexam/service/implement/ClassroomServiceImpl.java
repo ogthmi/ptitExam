@@ -96,4 +96,22 @@ public class ClassroomServiceImpl implements ClassroomService {
         classroom.getStudents().remove(studentRepository.findByStudentId(studentId));
         classroomRepository.save(classroom);
     }
+
+    @Override
+    public Page<Classroom> findByStudentsStudentId(String studentId, String search, Pageable pageable) {
+        if (search.equals("")) {
+            return classroomRepository.findByStudentsStudentId(studentId, pageable);
+        }
+        return classroomRepository.findByStudentsStudentIdAndClassNameContaining(studentId, search, pageable);
+    }
+
+    @Override
+    public void leaveClassroom(String classId) {
+        Classroom classroom = classroomRepository.findByClassId(classId);
+        org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) SecurityContextHolder
+                .getContext().getAuthentication().getPrincipal();
+        User student = userRepository.findByUsername(user.getUsername());
+        classroom.getStudents().remove(student.getStudent());
+        classroomRepository.save(classroom);
+    }
 }
