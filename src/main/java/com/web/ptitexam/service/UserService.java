@@ -12,6 +12,8 @@ public interface UserService {
 
     boolean isUsernameTaken(String username);
 
+    boolean isEmailTaken(String email);
+
     void authenticateRegistration(UserDTO userDTO);
 
     UserDTO getCurrentUser();
@@ -19,4 +21,10 @@ public interface UserService {
     User findByUsername(String username);
 
     List<StudentDTO> searchStudents(String id);
+
+    User getUserByEmail(String email);
+
+    String generateToken();
+
+    void updateUserPassword(User user, String password);
 }

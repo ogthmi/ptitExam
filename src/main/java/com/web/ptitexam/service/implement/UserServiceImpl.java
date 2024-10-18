@@ -151,4 +151,26 @@ public class UserServiceImpl implements UserService {
         return res;
 
     }
+
+    @Override
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public String generateToken() {
+        return UUID.randomUUID().toString();
+    }
+
+    @Override
+    public boolean isEmailTaken(String email) {
+        User user = userRepository.findByEmail(email);
+        return user != null;
+    }
+
+    @Override
+    public void updateUserPassword(User user, String password) {
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
+    }
 }

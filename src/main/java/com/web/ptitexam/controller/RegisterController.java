@@ -27,7 +27,7 @@ public class RegisterController {
         this.userService = userService;
     }
 
-    private String getRedirectUrlBasedOnRole (String role) {
+    private String getRedirectUrlBasedOnRole(String role) {
         return switch (role) {
             case Constant.ROLE_ADMIN -> Constant.PAGE_ADMIN_DASHBOARD;
             case Constant.ROLE_STUDENT -> Constant.PAGE_STUDENT_CLASSROOM;
@@ -44,11 +44,16 @@ public class RegisterController {
 
     @PostMapping(value = Constant.PAGE_REGISTER)
     public String registerUser(@ModelAttribute("userDTO") UserDTO userDTO,
-                               BindingResult bindingResult,
-                               Model model,
-                               RedirectAttributes redirectAttributes) {
+            BindingResult bindingResult,
+            Model model,
+            RedirectAttributes redirectAttributes) {
         if (userService.isUsernameTaken(userDTO.getUsername())) {
             model.addAttribute("error", "Tên đăng nhập đã tồn tại.");
+            return Constant.PAGE_REGISTER;
+        }
+
+        if (userService.isEmailTaken(userDTO.getEmail())) {
+            model.addAttribute("error", "Email đã tồn tại.");
             return Constant.PAGE_REGISTER;
         }
 
