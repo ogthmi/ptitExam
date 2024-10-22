@@ -46,6 +46,10 @@ nav {
     li:hover{
         text-decoration: underline;
     }
+    a {
+        color: white;
+        text-decoration: none
+    }
 }
 
 .nav_user_info {

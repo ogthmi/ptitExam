@@ -8,4 +8,6 @@ public interface ExamService {
 
     void getCurrentExamInfo();
 
+    ExamDTO getExamList();
+
 }

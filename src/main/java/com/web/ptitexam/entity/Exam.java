@@ -1,5 +1,7 @@
 package com.web.ptitexam.entity;
 
+import java.util.ArrayList;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -8,6 +10,9 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "exam-info")
 public class Exam {
+    @Id
+    @Column(nullable = false)
+    private String examId;
     @Column(nullable = false)
     private String examTitle;
     @Column(nullable = false)
@@ -20,6 +25,27 @@ public class Exam {
     private int questionNumber;
     @Column(nullable = false)
     private int classAssigned;
+    @Column(nullable = true)
+    private ArrayList<String> questionIdList;
+
+    public ArrayList<String> getQuestionIdList() {
+        return questionIdList;
+    }
+
+    public void setQuestionIdList(ArrayList<String> questionIdList) {
+        this.questionIdList = questionIdList;
+    }
+
+    public Exam() {
+    }
+
+    public String getExamId() {
+        return examId;
+    }
+
+    public void setExamId(String examId) {
+        this.examId = examId;
+    }
 
     public String getExamTitle() {
         return examTitle;

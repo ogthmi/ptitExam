@@ -1,5 +1,7 @@
 package com.web.ptitexam.dto;
 
+import java.util.ArrayList;
+
 public class ExamDTO {
 
     private String examTitle;
@@ -13,6 +15,16 @@ public class ExamDTO {
     private int questionNumber;
 
     private int classAssigned;
+
+    private ArrayList<String> questionIdList;
+
+    public ArrayList<String> getQuestionIdList() {
+        return questionIdList;
+    }
+
+    public void setQuestionIdList(ArrayList<String> questionIdList) {
+        this.questionIdList = questionIdList;
+    }
 
     public String getExamTitle() {
         return examTitle;

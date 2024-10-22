@@ -3,7 +3,7 @@ package com.web.ptitexam.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table (name = "teachers")
+@Table(name = "teachers")
 public class Teacher {
     @Id
     private String teacherId;
@@ -12,6 +12,17 @@ public class Teacher {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "userId")
     private User user;
+
+    @Column(nullable = false)
+    private String[] examIdList;
+
+    public String[] getExamIdList() {
+        return examIdList;
+    }
+
+    public void setExamIdList(String[] examIdList) {
+        this.examIdList = examIdList;
+    }
 
     public String getTeacherId() {
         return teacherId;
