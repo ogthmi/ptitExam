@@ -1,5 +1,7 @@
 package com.web.ptitexam.entity;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -12,6 +14,9 @@ public class Teacher {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "userId")
     private User user;
+
+    @OneToMany(mappedBy = "teacher")
+    private List<Classroom> classrooms;
 
     @Column(nullable = false)
     private String[] examIdList;

@@ -116,3 +116,14 @@ body {
     margin-left: 5px;
     color: var(--box-fill);
 }
+
+#error-message p{
+    padding: 10px;
+    background-color: #FFcac7;
+    color: #bb2019;
+}
+#success-message p{
+    padding: 10px;
+    background-color: #e4fde1;
+    color: #1c7b1c;
+}

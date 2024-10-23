@@ -5,6 +5,7 @@ import javax.swing.plaf.PanelUI;
 public class Constant {
 
     // Gender
+    // Gender
     public static final String GENDER_MALE = "MALE";
     public static final String GENDER_FEMALE = "FEMALE";
 
@@ -16,6 +17,7 @@ public class Constant {
     // Absolute URL
     public static final String MAIN_DIR = "/ptit-exam";
 
+    // Redirect
     // Redirect
     public static final String REDIRECT = "redirect:/";
 
@@ -32,10 +34,12 @@ public class Constant {
     public static final String TEACHER_SUBDIR = "teacher";
     public static final String PAGE_TEACHER_CLASSROOM = TEACHER_SUBDIR + "/classroom";
     public static final String PAGE_TEACHER_EXAM = TEACHER_SUBDIR + "/exam";
-    public static final String PAGE_TEACHER_EXAM_CREATE = PAGE_TEACHER_EXAM + "/create";
+    public static final String PAGE_TEACHER_EXAM_CREATE = TEACHER_SUBDIR + "/createexam";
+    public static final String PAGE_TEACHER_UPDATE_CLASSROOM = TEACHER_SUBDIR + "/update.classroom";
 
     // Student's page
     public static final String STUDENT_SUBDIR = "student";
     public static final String PAGE_STUDENT_CLASSROOM = STUDENT_SUBDIR + "/classroom";
 
+    public static final String PAGE_STUDENT_VIEW_CLASSROOM = STUDENT_SUBDIR + "/view.classroom";
 }

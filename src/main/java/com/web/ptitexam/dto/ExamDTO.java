@@ -2,13 +2,13 @@ package com.web.ptitexam.dto;
 
 import java.util.ArrayList;
 
+import com.web.ptitexam.entity.Teacher;
+
 public class ExamDTO {
 
     private String examTitle;
 
     private String examRole;
-
-    private String examAuthor;
 
     private int examDuration;
 
@@ -16,14 +16,14 @@ public class ExamDTO {
 
     private int classAssigned;
 
-    private ArrayList<String> questionIdList;
+    private Teacher teacher;
 
-    public ArrayList<String> getQuestionIdList() {
-        return questionIdList;
+    public Teacher getTeacher() {
+        return teacher;
     }
 
-    public void setQuestionIdList(ArrayList<String> questionIdList) {
-        this.questionIdList = questionIdList;
+    public void setTeacher(Teacher teacher) {
+        this.teacher = teacher;
     }
 
     public String getExamTitle() {
@@ -40,14 +40,6 @@ public class ExamDTO {
 
     public void setExamRole(String examRole) {
         this.examRole = examRole;
-    }
-
-    public String getExamAuthor() {
-        return examAuthor;
-    }
-
-    public void setExamAuthor(String examAuthor) {
-        this.examAuthor = examAuthor;
     }
 
     public int getExamDuration() {

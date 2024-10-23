@@ -54,13 +54,11 @@
     <div class="content">
       <div class="message">
         <h2>
-          Lớp học
-          <span class="text-danger" th:text="'(' + ${totalItems} + ')'"></span>
+          Tạo đề thi mới
         </h2>
         <div th:if="${success}" id="success-message">
           <p th:text="${success}"></p>
         </div>
-
         <div th:if="${error}" id="error-message">
           <p th:text="${error}"></p>
         </div>
@@ -86,198 +84,59 @@
           });
         </script>
 
-        <div class="search_tool">
-          <input
-            type="text"
-            name="classroom"
-            id="search_input"
-            th:value="${search}"
-            placeholder="Tìm kiếm lớp theo tên"
-          />
-          <a hidden id="red_button" class="search-student">Tìm kiếm</a>
+      <div class="exam-crate-form border p-3">
+        <form th:action="@{/teacher/exam/create}" method="post">
 
-          <select id="sort_criteria">
-            <option value="default" th:selected="${sort == 'default'}">
-              Sắp xếp
-            </option>
-            <option value="az" th:selected="${sort == 'az'}">A - Z</option>
-            <option value="za" th:selected="${sort == 'za'}">Z - A</option>
-            <option value="newest" th:selected="${sort == 'newest'}">
-              Mới nhất
-            </option>
-            <option value="oldest" th:selected="${sort == 'oldest'}">
-              Cũ nhất
-            </option>
-          </select>
-          <div class="add-class-wrapper">
-            <a
-              data-toggle="modal"
-              data-target="#create-classroom"
-              id="red_button"
-              class="add-classroom"
-              >+ Tạo lớp mới</a
-            >
-          </div>
-          <a id="red_button" hidden class="sort-student">Áp dụng</a>
-        </div>
-      </div>
-      <div class="info-table">
-        <table>
-          <thead>
-            <tr>
-              <th>STT</th>
-              <th>Mã lớp</th>
-              <th>Tên lớp</th>
-              <th>Ngày tạo</th>
-              <th>Giờ tạo</th>
-              <th>Số học sinh</th>
-              <th>Số đề thi</th>
-              <th>Thao tác</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr th:each="classroom, iterStat : ${classrooms}">
-              <td th:text="${iterStat.count}"></td>
-              <td>
-                <a
-                  th:href="@{'/teacher/classroom/update/' + ${classroom.classId}}"
-                  th:text="${classroom.classId}"
-                >
-                </a>
-              </td>
-              <td th:text="${classroom.className}"></td>
-              <td
-                th:text="${#dates.format(classroom.classCreatedAt, 'dd/MM/yyyy')}"
-              ></td>
-              <td
-                th:text="${#dates.format(classroom.classCreatedAt, 'HH:mm:ss')}"
-              ></td>
-              <td th:text="${classroom.students.size()}"></td>
-              <td>0</td>
-              <td>
-                <form
-                  th:action="@{'/teacher/classroom/delete/' + ${classroom.classId}}"
-                  method="post"
-                  class="delete-form"
-                >
-                  <button
-                    type="button"
-                    th:attr="data-id=${classroom.classId}"
-                    class="btn btn-danger delete-btn"
-                    data-toggle="modal"
-                    data-target="#delete-classroom"
-                  >
-                    Xóa
-                  </button>
-                </form>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+            <div class="examHeaderInfo">
+                <label for="name">Tên đề thi:</label>
+                <input type="text" name="name" id="examTitle" required>
+                <br>
+                <label for="duration"> Thời gian làm bài (phút):</label>
+                <input type="text" name="duration" id="examDuration" required>
+            </div>
+            <div class="examQuestionInfo">
+                <div id="questionList" class="p-2"></div>
+                <div id="addquestionButton">
+                    <button id="red_button" type="button" onclick="insertQuestionForm()">Thêm câu hỏi</button>
+                </div>
+            </div>
+            <div class="mt-2"></div>
+            <button type="submit" id="red_button">Tạo đề thi</button>
+           
+        </form>
+        <script>
+            //Thêm mới câu hỏi mỗi khi ấn button
+            function insertQuestionForm()
+            {
+                var questionListDiv = document.getElementById("questionList");
+                questionListDiv.innerHTML += `<div class="questionForm border p-1 mt-1">\n
+                    <form action="" method="post">\n
+                        <label for="question">Câu hỏi: </label>
+                        <input type="text" class="form-control" name="question" id="questionTitle" required>\n
+                        <br>\n
+                        <label for="answer">A: </label>\n
+                        <input type="text" class="form-control" name="answer" id="answerA" required>\n
+                        <br>\n
+                        <label for="answer">B: </label>\n
+                        <input type="text" class="form-control" name="answer" id="answerB" required>\n
+                        <br>\n
+                        <label for="answer">C: </label>\n
+                        <input type="text" class="form-control" name="answer" id="answerC" required>\n
+                        <br>\n
+                        <label for="answer">D: </label>\n
+                        <input type="text" class="form-control" name="answer" id="answerD" required>\n
+                        <br>\n
+                    </form>\n
+                </div>\n`
+            }
+        </script>
 
-        <p th:if="${totalItems == 0}" class="text-center mt-4 text-danger">
-          Hiện tại không có lớp học nào!
-        </p>
 
-        <div
-          class="mt-4 d-flex justify-content-center"
-          aria-label="Page navigation example"
-          th:if="${totalItems >= 1}"
-        >
-          <ul class="pagination">
-            <!-- Previous Button -->
-            <li
-              class="page-item"
-              th:classappend="${currentPage == 1} ? 'disabled'"
-            >
-              <a
-                class="page-link"
-                th:href="@{/teacher/classroom(current=${currentPage - 1}, pageSize=${pageSize})}"
-                aria-label="Previous"
-              >
-                <span aria-hidden="true">&laquo;</span>
-              </a>
-            </li>
-
-            <!-- Page Numbers -->
-            <li
-              th:each="i : ${#numbers.sequence(1, totalPages)}"
-              class="page-item"
-              th:classappend="${i == currentPage} ? 'active'"
-            >
-              <a
-                class="page-link"
-                th:href="@{/teacher/classroom(current=${i}, pageSize=${pageSize})}"
-                th:text="${i}"
-              ></a>
-            </li>
-
-            <!-- Next Button -->
-            <li
-              class="page-item"
-              th:classappend="${currentPage == totalPages} ? 'disabled'"
-            >
-              <a
-                class="page-link"
-                th:href="@{/teacher/classroom(current=${currentPage + 1}, pageSize=${pageSize})}"
-                aria-label="Next"
-              >
-                <span aria-hidden="true">&raquo;</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
+      
     </div>
 
     <!-- Modal -->
-    <div
-      class="modal fade"
-      id="create-classroom"
-      data-backdrop="static"
-      data-keyboard="false"
-      tabindex="-1"
-      aria-labelledby="staticBackdropLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="staticBackdropLabel">
-              Tạo mới lớp học
-            </h5>
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form th:action="@{/teacher/classroom/create}" method="post">
-              <div class="form-group">
-                <label for="exampleInputEmail1">Tên lớp học</label>
-                <input type="text" class="form-control" name="name" required />
-              </div>
-              <div class="modal-footer">
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  data-dismiss="modal"
-                >
-                  Đóng
-                </button>
-                <button type="submit" class="btn btn-danger">
-                  Tạo mới lớp
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
+
 
     <div
       class="modal fade"

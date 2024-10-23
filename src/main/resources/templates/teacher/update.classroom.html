@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+      integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
+      crossorigin="anonymous"
+    />
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/class-style.css}" />
+    <link rel="icon" th:href="@{/image/login/PTIT_LOGO.png}" />
+
+    <title>Cập nhật lớp học</title>
+  </head>
+
+  <body>
+    <nav>
+      <div class="nav_function">
+        <img th:src="@{/image/homepage/PTIT_LOGO_WHITE.png}" alt="PTIT Logo" />
+        <div>
+          <a th:href="@{/teacher/classroom}">Lớp học</a>
+          <a>Đề thi</a>
+        </div>
+      </div>
+      <div class="nav_user_info">
+        <div id="nav_username">
+          <h4 th:text="${userDTO.lastname} + ' ' + ${userDTO.firstname}">
+            Tên người dùng
+          </h4>
+          <h5
+            th:text="${userDTO.role == 'TEACHER' ? 'Giáo viên' :
+               (userDTO.role == 'STUDENT' ? 'Sinh viên' :
+               (userDTO.role == 'STUDENT' ? 'Quản trị viên' : 'null'
+            ))}"
+          >
+            Vai trò
+          </h5>
+        </div>
+        <div id="user_more_tools">
+          ▼
+          <ul class="user-menu">
+            <li><a th:href="@{/user-info}">Hồ sơ</a></li>
+            <li><a href="#">Hướng dẫn</a></li>
+            <li>
+              <form th:action="@{/logout}" method="post" id="logout_button">
+                <button type="submit">Đăng xuất</button>
+              </form>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    
+    <div class="container">
+      <div class="mt-4">
+        <h2 class="text-center title-create">Chỉnh sửa lớp học</h2>
+        <form
+          th:action="@{/teacher/classroom/update/{id}(id=${classroom.classId})}"
+          method="post"
+        >
+          <div class="form-group">
+            <label for="exampleInputEmail1">Tên lớp học</label>
+            <input
+              type="text"
+              class="form-control"
+              th:value="${classroom.className}"
+              name="name"
+            />
+          </div>
+          <button type="submit" class="btn btn-danger">Cập nhật lớp</button>
+        </form>
+      </div>
+
+      <div class="mt-4">
+        <h2 class="text-center title-create">
+          Danh sách Sinh Viên Lớp
+          <span th:text="${classroom.className}"></span> 
+          <span class="text-danger" th:text="'(' + ${totalItems} + ')'"></span>
+        </h2>
+
+        <div class="mt-5">
+          <div class="message">
+            <div th:if="${success}" id="success-message">
+              <p th:text="${success}"></p>
+            </div>
+    
+            <div th:if="${error}" id="error-message">
+              <p th:text="${error}"></p>
+            </div>
+            <script>
+              // Kiểm tra nếu phần tử success-message tồn tại trên trang
+              window.addEventListener("load", function () {
+                var successMessage = document.getElementById("success-message");
+                if (successMessage) {
+                  // Ẩn thông báo sau 5 giây
+                  setTimeout(function () {
+                    successMessage.style.display = "none";
+                  }, 5000);
+                }
+    
+                var errorMessage = document.getElementById("error-message");
+    
+                if (errorMessage) {
+                  // Ẩn thông báo sau 5 giây
+                  setTimeout(function () {
+                    errorMessage.style.display = "none";
+                  }, 5000);
+                }
+              });
+            </script>
+          </div>
+    
+          <div class="search_tool">
+            
+            <input
+                type="text"
+                name="classroom"
+                id="search_input"
+                placeholder="Tìm kiếm Sinh Viên Theo Mã Sinh Viên"
+                th:value="${search}"
+
+            />
+            <a id="red_button" hidden class="search-student">Tìm kiếm</a>
+
+            <select id="sort_order">
+              <option value="default" th:selected="${sort == 'default'}">Sắp xếp</option>
+              <option value="az" th:selected="${sort == 'az'}">A-Z</option>
+              <option value="za" th:selected="${sort == 'za'}">Z-A</option>
+            </select>
+        
+            <select style="margin: 0 10px" id="sort_criteria">
+                <option value="default" th:selected="${key == 'default'}">Tiêu chí</option>
+                <option value="studentId" th:selected="${key == 'studentId'}">Mã sinh viên</option>
+                <option value="className" th:selected="${key == 'className'}">Lớp</option>
+                <option value="major" th:selected="${key == 'major'}">Chuyên ngành</option>
+            </select>
+            <a id="red_button" class="sort-student">Sắp xếp</a>
+          </div>
+
+        <div class="info-table">
+          <button
+            data-toggle="modal"
+            data-target="#add-student"
+            type="button"
+            class="btn btn-danger mb-3"
+          >
+            Thêm mới sinh viên
+          </button>
+          <table>
+            <thead>
+              <tr>
+                <th>STT</th>
+                <th>Mã Sinh Viên</th>
+                <th>Họ tên</th>
+                <th>Chuyên ngành</th>
+                <th>Lớp</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="student, iterStat : ${students}">
+                <td th:text="${iterStat.count}"></td>
+                <td>
+                  <a
+                   
+                    th:text="${student.studentId}"
+                  >
+                  </a>
+                </td>
+                <td th:text="${student.user.firstname} + ${student.user.lastname}"></td>
+                <td th:text="${student.major}"></td>
+                <td th:text="${student.className}"></td>
+                <td>
+                  <a
+                    th:href="@{/teacher/classroom/remove-student/{classId}/{studentId}(classId=${classroom.classId}, studentId=${student.studentId})}"
+                    class="btn btn-danger"
+                    >Xóa</a
+                  >
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p th:if="${totalItems == 0}" class="text-center mt-4 text-danger">
+            Không có sinh viên nào trong lớp
+
+          <div
+          class="mt-4 d-flex justify-content-center"
+          th:if="${totalItems >= 1}"
+          aria-label="Page navigation example"
+        >
+            <ul class="pagination">
+              <!-- Previous Button -->
+              <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                  <a class="page-link"
+                    th:href="@{/teacher/classroom/update/{id}(id=${classroom.classId}, current=${currentPage - 1}, pageSize=${pageSize})}"
+                    aria-label="Previous">
+                      <span aria-hidden="true">&laquo;</span>
+                  </a>
+              </li>
+          
+              <!-- Page Numbers -->
+              <li th:each="i : ${#numbers.sequence(1, totalPages)}" class="page-item" th:classappend="${i == currentPage} ? 'active'">
+                  <a class="page-link"
+                    th:href="@{/teacher/classroom/update/{id}(id=${classroom.classId}, current=${i}, pageSize=${pageSize})}"
+                    th:text="${i}"></a>
+              </li>
+          
+              <!-- Next Button -->
+              <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                  <a class="page-link"
+                    th:href="@{/teacher/classroom/update/{id}(id=${classroom.classId}, current=${currentPage + 1}, pageSize=${pageSize})}"
+                    aria-label="Next">
+                      <span aria-hidden="true">&raquo;</span>
+                  </a>
+              </li>
+          </ul>
+        </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="add-student"
+      data-backdrop="static"
+      data-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="staticBackdropLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel">
+              Thêm mới sinh viên
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form th:action="@{/teacher/classroom/add-student}" method="post">
+              <div class="form-group">
+                <label for="studentId">Mã Sinh Viên</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="studentId-inp"
+                    name="studentId"
+                    required
+                />
+                <div class="dropdown-menu" id="student-dropdown"></div>
+                <input
+                    type="hidden"
+                    name="classId"
+                    th:value="${classroom.classId}"
+                />
+            </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-dismiss="modal"
+                >
+                  Đóng
+                </button>
+                <button type="submit" class="btn btn-danger">
+                  Thêm sinh viên
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const moreTools = document.getElementById("user_more_tools");
+      const userMenu = moreTools.querySelector(".user-menu");
+
+      // Toggle menu khi bấm vào biểu tượng tam giác
+      moreTools.addEventListener("click", (event) => {
+        event.stopPropagation(); // Ngăn không để sự kiện bấm vào phần tử cha
+        userMenu.classList.toggle("show");
+      });
+
+      // Đóng menu khi bấm ra ngoài
+      document.addEventListener("click", (event) => {
+        if (!moreTools.contains(event.target)) {
+          // Kiểm tra nếu không bấm vào trong menu
+          userMenu.classList.remove("show"); // Xóa lớp 'show' để ẩn menu
+        }
+      });
+
+      // Tìm kiếm sinh viên
+
+      const studentInput = document.getElementById('studentId-inp');
+      const dropdown = document.getElementById('student-dropdown');
+
+      let debounceTimeout;
+
+      studentInput.addEventListener('input', function () {
+          clearTimeout(debounceTimeout);
+          debounceTimeout = setTimeout(() => {
+              const query = studentInput.value.trim();
+              if (query) {
+                  fetch(`/ptit-exam/api/student/search?id=${query}`)
+                      .then(response => response.json())
+                      .then(data => {
+                          dropdown.innerHTML = '';
+                          if (data.length) {
+                              data.forEach(student => {
+                                  const item = document.createElement('a');
+                                  item.classList.add('dropdown-item', 'text-danger');
+                                  item.href = '#';
+                                  item.textContent = student.studentId + " - " + student.name;
+                                  
+                                  item.addEventListener('click', function () {
+                                      studentInput.value = student.studentId;
+                                      dropdown.classList.remove('show');
+                                  });
+                                  dropdown.appendChild(item);
+                              });
+                              dropdown.classList.add('show');
+                          } else {
+                              const noResultItem = document.createElement('div');
+                              noResultItem.classList.add('dropdown-item', 'text-muted');
+                              noResultItem.textContent = 'Không tìm thấy sinh viên nào có mã tương ứng';
+                              dropdown.appendChild(noResultItem);
+                              dropdown.classList.add('show');
+                          }
+                      })
+                      .catch(error => {
+                          
+                          dropdown.classList.remove('show');
+                      });
+              } else {
+                  dropdown.classList.remove('show');
+              }
+          }, 200); // 300ms debounce time
+      });
+
+      document.addEventListener('click', function (e) {
+          if (!studentInput.contains(e.target) && !dropdown.contains(e.target)) {
+              dropdown.classList.remove('show');
+          }
+      });
+
+      // Sắp xếp sinh viên
+
+      const sortButton = document.querySelector('.sort-student');
+      const sortOrderSelect = document.getElementById('sort_order');
+      const sortCriteriaSelect = document.getElementById('sort_criteria');
+
+      sortButton.addEventListener('click', function () {
+          const sortOrder = sortOrderSelect.value;
+          const sortCriteria = sortCriteriaSelect.value;
+
+          let queryParams = new URLSearchParams(window.location.search);
+
+          if (sortOrder !== 'default' && sortCriteria !== 'default') {
+              queryParams.set('sort', sortOrder);
+              queryParams.set('key', sortCriteria);
+          } else {
+              queryParams.delete('sort');
+              queryParams.delete('key');
+          }
+
+          window.location.search = queryParams.toString();
+      });
+
+      // Tìm kiếm lớp sinh viên
+
+      const searchButton = document.querySelector(".search-student");
+        const searchInput = document.getElementById("search_input");
+
+        searchButton.addEventListener("click", function () {
+          const searchInput = document.getElementById("search_input");
+          const searchValue = searchInput.value;
+
+          let queryParams = new URLSearchParams(window.location.search);
+          
+          queryParams.delete('current');
+          queryParams.delete('pageSize');
+          if (searchValue) {
+            queryParams.set("search", searchValue);
+          } else {
+            queryParams.delete("search");
+          }
+
+          window.location.search = queryParams.toString();
+        });
+
+        searchInput.addEventListener("keydown", function (e) {
+          if (e.key === "Enter") {
+            searchButton.click();
+          }
+        });
+    });
+
+  </script>
+</html>

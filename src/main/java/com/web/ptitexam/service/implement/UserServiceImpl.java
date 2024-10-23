@@ -1,6 +1,7 @@
 package com.web.ptitexam.service.implement;
 
 import com.web.ptitexam.constant.Constant;
+import com.web.ptitexam.dto.StudentDTO;
 import com.web.ptitexam.dto.UserDTO;
 import com.web.ptitexam.entity.Student;
 import com.web.ptitexam.entity.Teacher;
@@ -18,9 +19,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,9 +41,9 @@ public class UserServiceImpl implements UserService {
     private HttpServletRequest request;
 
     public UserServiceImpl(UserRepository userRepository,
-                           StudentRepository studentRepository,
-                           TeacherRepository teacherRepository,
-                           BCryptPasswordEncoder passwordEncoder) {
+            StudentRepository studentRepository,
+            TeacherRepository teacherRepository,
+            BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.studentRepository = studentRepository;
         this.teacherRepository = teacherRepository;
@@ -82,13 +85,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void authenticateRegistration(UserDTO userDTO) {
+        UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
+                .username(userDTO.getUsername())
+                .password(userDTO.getPassword())
+                .authorities(List.of(new SimpleGrantedAuthority(userDTO.getRole())))
+                .build();
+
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                userDTO.getUsername(),
-                userDTO.getPassword(),
-                List.of(new SimpleGrantedAuthority(userDTO.getRole()))
-        );
-        System.out.println(authenticationToken);
+                userDetails, userDTO.getPassword(), userDetails.getAuthorities());
+
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
         HttpSession session = request.getSession();
         session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
     }
@@ -114,13 +121,56 @@ public class UserServiceImpl implements UserService {
                 if (teacher != null) {
                     BeanUtils.copyProperties(teacher, userDTO);
                 }
-            }
-            else if (Constant.ROLE_STUDENT.equals(user.getRole())) {
+            } else if (Constant.ROLE_STUDENT.equals(user.getRole())) {
                 Student student = user.getStudent();
                 if (student != null)
                     BeanUtils.copyProperties(student, userDTO);
-                }
             }
+        }
         return userDTO;
+    }
+
+    @Override
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    @Override
+    public List<StudentDTO> searchStudents(String id) {
+
+        List<Student> students = studentRepository.findAll();
+
+        List<StudentDTO> res = new ArrayList<>();
+
+        for (Student student : students) {
+            if (student.getStudentId().toLowerCase().contains(id.toLowerCase())) {
+                res.add(student.getUser().convertToStudentDTO());
+            }
+        }
+
+        return res;
+
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public String generateToken() {
+        return UUID.randomUUID().toString();
+    }
+
+    @Override
+    public boolean isEmailTaken(String email) {
+        User user = userRepository.findByEmail(email);
+        return user != null;
+    }
+
+    @Override
+    public void updateUserPassword(User user, String password) {
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
     }
 }

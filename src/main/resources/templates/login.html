@@ -1,57 +1,76 @@
 <!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Đăng nhập - PTIT Exam</title>
-    <link rel="stylesheet" th:href="@{/css/login-style.css}">
-    <link rel="icon" th:href="@{/image/login/PTIT_LOGO.png}">
-</head>
-<body>
-<div class="ptit-logo-container">
-    <img th:src="@{/image/login/PTIT_LOGO.png}" alt="PTIT Logo">
-    <div>
+    <link rel="stylesheet" th:href="@{/css/login-style.css}" />
+    <link rel="icon" th:href="@{/image/login/PTIT_LOGO.png}" />
+  </head>
+  <body>
+    <div class="ptit-logo-container">
+      <img th:src="@{/image/login/PTIT_LOGO.png}" alt="PTIT Logo" />
+      <div>
         <h2>HỌC VIỆN CÔNG NGHỆ BƯU CHÍNH VIỄN THÔNG</h2>
         <h3>Posts and Telecommunications Institute of Technology</h3>
+      </div>
     </div>
-</div>
 
-<div class="openning-title">
-    <h1>Hệ thống thi trắc nghiệm trực tuyến - PTIT Exam</h1>
-</div>
-
-<div class="login-container">
-    <h2>Đăng nhập</h2>
-    <div th:if="${session.error}" class="error-message" id="error-message">
-        <p th:text="${session.error}">Tên đăng nhập hoặc mật khẩu không chính xác.</p>
+    <div class="openning-title">
+      <h1>Hệ thống thi trắc nghiệm trực tuyến - PTIT Exam</h1>
     </div>
-    <div th:if="${param.logout}" class="logout-message" id="logout-message">
+
+    <div class="login-container">
+      <h2>Đăng nhập</h2>
+      <div th:if="${session.error}" class="error-message" id="error-message">
+        <p th:text="${session.error}">
+          Tên đăng nhập hoặc mật khẩu không chính xác.
+        </p>
+      </div>
+      <div th:if="${param.logout}" class="logout-message" id="logout-message">
         <p>Đăng xuất thành công.</p>
         <script>
-            // Kiểm tra nếu phần tử success-message tồn tại trên trang
-            window.addEventListener('load', function () {
-                var successMessage = document.getElementById("logout-message");
-                if (successMessage) {
-                    setTimeout(function () {
-                        successMessage.style.display = 'none';
-                    }, 5000);
-                }
-            });
+          // Kiểm tra nếu phần tử success-message tồn tại trên trang
+          window.addEventListener("load", function () {
+            var successMessage = document.getElementById("logout-message");
+            if (successMessage) {
+              setTimeout(function () {
+                successMessage.style.display = "none";
+              }, 5000);
+            }
+          });
         </script>
-    </div>
-    <form th:action="@{/login}" method="post" th:object="${userDTO}">
+      </div>
+      <form th:action="@{/login}" method="post" th:object="${userDTO}">
         <label for="username">Tên đăng nhập:</label>
-        <input type="text" id="username" name="username" required th:field="*{username}">
+        <input
+          type="text"
+          id="username"
+          name="username"
+          required
+          th:field="*{username}"
+        />
 
         <label for="password">Mật khẩu:</label>
-        <input type="password" id="password" name="password" required th:field="*{password}">
-
+        <input
+          type="password"
+          id="password"
+          name="password"
+          required
+          th:field="*{password}"
+        />
 
         <button type="submit">Đăng nhập</button>
 
-        <label>Chưa có tài khoản?
-            <a th:href="@{/register}" class="sign-up">Đăng ký</a>
+        <label
+          >Chưa có tài khoản?
+          <a th:href="@{/register}" class="sign-up">Đăng ký</a>
         </label>
-    </form>
-</div>
-</body>
+
+        <label
+          >Quên mật khẩu?
+          <a th:href="@{/forgot-password}" class="sign-up">Nhấn vào đây</a>
+        </label>
+      </form>
+    </div>
+  </body>
 </html>
