@@ -1,7 +1,7 @@
 package com.web.ptitexam.service.implement;
 
 import java.util.UUID;
-
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.web.ptitexam.dto.ExamDTO;
 import com.web.ptitexam.entity.Exam;
+import com.web.ptitexam.entity.Student;
 import com.web.ptitexam.entity.Teacher;
 import com.web.ptitexam.entity.User;
 import com.web.ptitexam.repository.ClassroomRepository;
@@ -21,16 +22,14 @@ import com.web.ptitexam.service.ExamService;
 @Service
 public class ExamServiceImpl implements ExamService {
 
-    private final TeacherRepository teacherRepository;
     private final UserRepository userRepository;
-    private final StudentRepository studentRepository;
     private final ExamRepository examRepository;
 
     public ExamServiceImpl(TeacherRepository teacherRepository, UserRepository userRepository,
             StudentRepository studentRepository, ExamRepository examRepository) {
-        this.teacherRepository = teacherRepository;
+
         this.userRepository = userRepository;
-        this.studentRepository = studentRepository;
+
         this.examRepository = examRepository;
     }
 
@@ -74,9 +73,8 @@ public class ExamServiceImpl implements ExamService {
     }
 
     @Override
-    public Page<Exam> findAll() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findAll'");
+    public List<Exam> findAll() {
+        return examRepository.findAll();
     }
 
     @Override
@@ -84,6 +82,28 @@ public class ExamServiceImpl implements ExamService {
         Exam exam = examRepository.findByExamId(id);
         exam.setExamTitle(examDTO.getExamTitle());
         examRepository.save(exam);
+    }
+
+    @Override
+    public Page<Exam> findByTeacherExamId(String examId, String search, Pageable pageable) {
+        return examRepository.findByExamId(examId, search, pageable);
+
+    }
+
+    @Override
+    public void deleteExamById(String id) {
+        examRepository.deleteById(id);
+    }
+
+    @Override
+    public Page<Exam> findByStudentExamId(String examId, String search, Pageable pageable) {
+        return examRepository.findByExamId(examId, search, pageable);
+    }
+
+    @Override
+    public Page<Exam> findByStudent(Student student, String search, Pageable pageable) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'findByStudent'");
     }
 
 }

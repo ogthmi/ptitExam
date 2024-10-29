@@ -56,24 +56,23 @@ public class ExamController {
 
             Pageable pageable;
             if ("az".equals(sort)) {
-                key = "className";
+                key = "examId";
                 pageable = PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.ASC, key));
             } else if ("za".equals(sort) && key != null && !key.isEmpty()) {
-                key = "className";
+                key = "examId";
                 pageable = PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.DESC, key));
             } else if ("newest".equals(sort)) {
-                key = "classCreatedAt";
+                key = "examCreatedAt";
                 pageable = PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.DESC, key));
             } else if ("oldest".equals(sort)) {
-                key = "classCreatedAt";
+                key = "examCreatedAt";
                 pageable = PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.ASC, key));
             } else {
                 pageable = PageRequest.of(current - 1, pageSize);
             }
+            Page<Exam> examPage = examService.findByTeacher(user.getTeacher(), search, pageable);
 
             model.addAttribute("userDTO", currentUser);
-
-            Page<Exam> examPage = examService.findByTeacher(user.getTeacher(), search, pageable);
 
             model.addAttribute("exam", examPage.getContent());
 
@@ -104,7 +103,7 @@ public class ExamController {
     }
 
     @PostMapping(Constant.PAGE_TEACHER_EXAM + "/create")
-    public String createExam(@RequestParam("examTitle") String title, @RequestParam("examDuration") int examDuration,
+    public String createExam(@RequestParam("examTitle") String title, @RequestParam("examDuration") String examDuration,
             Model model,
             RedirectAttributes redirectAttributes) {
 
@@ -113,25 +112,78 @@ public class ExamController {
 
         ExamDTO examDTO = new ExamDTO();
         examDTO.setExamTitle(title);
-        examDTO.setExamDuration(examDuration);
+        examDTO.setExamDuration(Integer.parseInt(examDuration));
         examService.createExam(examDTO);
         redirectAttributes.addFlashAttribute("success", "Tạo đề thi thành công.");
 
         return "redirect:/teacher/exam";
     }
 
-    @PostMapping(Constant.PAGE_TEACHER_CLASSROOM + "/udpate/{id}")
-    public String updateClassroom(@PathVariable("id") String id, @RequestParam("name") String title, Model model,
-            RedirectAttributes redirectAttributes) {
-
-        org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) SecurityContextHolder
-                .getContext().getAuthentication().getPrincipal();
-
-        ExamDTO examDTO = new ExamDTO();
-        examDTO.setExamTitle(title);
-        examService.createExam(examDTO);
-        redirectAttributes.addFlashAttribute("success", "Cập nhật đề thi thành công.");
+    @PostMapping(Constant.PAGE_TEACHER_EXAM + "/delete/{id}")
+    public String deleteExam(@PathVariable("id") String examId, RedirectAttributes redirectAttributes) {
+        Exam exam = examService.findByExamId(examId);
+        if (exam == null) {
+            redirectAttributes.addFlashAttribute("error", "Đề thi không tồn tại");
+        } else {
+            examService.deleteExamById(examId);
+            redirectAttributes.addFlashAttribute("success", "Xóa đề thi thành công");
+        }
 
         return "redirect:/teacher/exam";
     }
+
+    // @GetMapping(Constant.PAGE_STUDENT_EXAM)
+    // public String showExamClassroom(Model model, @RequestParam(value = "current", defaultValue = "1") int current,
+    //         @RequestParam(value = "pageSize", defaultValue = "5") int pageSize,
+    //         @RequestParam(value = "sort", defaultValue = "") String sort,
+    //         @RequestParam(value = "search", defaultValue = "") String search) {
+    //     UserDTO currentUser = userService.getCurrentUser();
+    //     User user = userService.findByUsername(currentUser.getUsername());
+
+    //     String key = "default";
+
+    //     if ((!sort.equals("az") && !sort.equals("za") && !sort.equals("newest") && !sort.equals("oldest"))
+    //             || sort.isEmpty()) {
+    //         sort = "default";
+    //     }
+
+    //     model.addAttribute("sort", sort);
+
+    //     Pageable pageable;
+    //     if ("az".equals(sort)) {
+    //         key = "examId";
+    //         pageable = PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.ASC, key));
+    //     } else if ("za".equals(sort) && key != null && !key.isEmpty()) {
+    //         key = "examId";
+    //         pageable = PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.DESC, key));
+    //     } else if ("newest".equals(sort)) {
+    //         key = "examCreatedAt";
+    //         pageable = PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.DESC, key));
+    //     } else if ("oldest".equals(sort)) {
+    //         key = "examCreatedAt";
+    //         pageable = PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.ASC, key));
+    //     } else {
+    //         pageable = PageRequest.of(current - 1, pageSize);
+    //     }
+    //     Page<Exam> examPage = examService.findByStudent(user.getStudent(), search, pageable);
+
+    //     model.addAttribute("userDTO", currentUser);
+
+    //     model.addAttribute("exam", examPage.getContent());
+
+    //     // trang hiện tại
+    //     model.addAttribute("currentPage", current);
+
+    //     // số lượng items mỗi trang
+    //     model.addAttribute("pageSize", pageSize);
+
+    //     // tổng số trang
+    //     model.addAttribute("totalPages", examPage.getTotalPages());
+
+    //     // tổng số items
+    //     model.addAttribute("totalItems", examPage.getTotalElements());
+    //     model.addAttribute("userDTO", currentUser);
+    //     return Constant.PAGE_STUDENT_CLASSROOM;
+    // }
+
 }

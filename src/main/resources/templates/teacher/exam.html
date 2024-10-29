@@ -54,7 +54,7 @@
     <div class="content">
       <div class="message">
         <h2>
-          Lớp học
+          Đề thi
           <span class="text-danger" th:text="'(' + ${totalItems} + ')'"></span>
         </h2>
         <div th:if="${success}" id="success-message">
@@ -129,21 +129,15 @@
               <th>Mã đề thi</th>
               <th>Tên đề thi</th>
               <th>Ngày tạo</th>
-              <th>Thời gian</th>
+              <th>Thời gian làm bài</th>
               <th>Trạng thái đề thi</th>
               <th>Thao tác</th>
             </tr>
           </thead>
           <tbody>
-            <tr th:each="exam, iterStat : ${exams}">
+            <tr th:each="exam, iterStat : ${exam}">
               <td th:text="${iterStat.count}"></td>
-              <td>
-                <a
-                  th:href="@{'teacher/exam/update/' + ${exam.examId}}"
-                  th:text="${classroom.classId}"
-                >
-                </a>
-              </td>
+              <td th:text="${exam.examId}"></td>
               <td th:text="${exam.examTitle}"></td>
               <td
                 th:text="${#dates.format(exam.examCreatedAt, 'dd/MM/yyyy')}"
@@ -151,21 +145,34 @@
               <td th:text="${exam.examDuration}"></td>
               <td>Đang thử nghiệm</td>
               <td>
-                <form
-                  th:action="@{'teacher/exam/update/' + ${classroom.classId}}"
-                  method="post"
-                  class="delete-form"
-                >
-                  <button
-                    type="button"
-                    th:attr="data-id=${exam.classId}"
-                    class="btn btn-danger delete-btn"
-                    data-toggle="modal"
-                    data-target="#"
+                <div class="d-flex justify-content-around">
+                  <form>
+                    <button
+                      type="button"
+                      th:attr="data-id=${exam.examId}"
+                      class="btn btn-info"
+                      data-toggle="modal"
+                      data-target="#"
+                    >
+                      Chỉnh sửa
+                    </button>
+                  </form>
+                  <form
+                    th:action="@{'/teacher/exam/delete/' + ${exam.examId}}"
+                    method="post"
+                    class="delete-exam-form"
                   >
-                    Làm ngay
-                  </button>
-                </form>
+                    <button
+                      type="button"
+                      th:attr="data-id=${exam.examId}"
+                      class="btn btn-danger btn-delete"
+                      data-toggle="modal"
+                      data-target="#delete-exam"
+                    >
+                      Xóa
+                    </button>
+                  </form>
+                </div>
               </td>
             </tr>
           </tbody>
@@ -188,7 +195,7 @@
             >
               <a
                 class="page-link"
-                th:href="@{/teacher/classroom(current=${currentPage - 1}, pageSize=${pageSize})}"
+                th:href="@{/teacher/exam(current=${currentPage - 1}, pageSize=${pageSize})}"
                 aria-label="Previous"
               >
                 <span aria-hidden="true">&laquo;</span>
@@ -203,7 +210,7 @@
             >
               <a
                 class="page-link"
-                th:href="@{/teacher/classroom(current=${i}, pageSize=${pageSize})}"
+                th:href="@{/teacher/exam(current=${i}, pageSize=${pageSize})}"
                 th:text="${i}"
               ></a>
             </li>
@@ -228,6 +235,42 @@
 
     <!-- Modal -->
 
+    <div
+      class="modal fade"
+      id="delete-exam"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Xóa đề thi</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">Bạn có chắc là muốn xóa đề thi này?</div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary btn-close"
+              data-dismiss="modal"
+            >
+              Đóng
+            </button>
+            <button type="button" class="btn btn-danger confirm-delete">
+              Xác Nhận
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
     <script
       src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
       integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"

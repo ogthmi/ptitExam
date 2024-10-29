@@ -19,8 +19,8 @@
       <div class="nav_function">
         <img th:src="@{/image/homepage/PTIT_LOGO_WHITE.png}" alt="PTIT Logo" />
         <div>
-          <a th:href="@{/teacher/classroom}">Lớp học</a>
-          <a th:href="@{/teacher/exam}">Đề thi</a>
+          <a th:href="@{/student/classroom}">Lớp học</a>
+          <a th:href="@{/student/exam}">Đề thi</a>
         </div>
       </div>
       <div class="nav_user_info">
@@ -54,11 +54,13 @@
     <div class="content">
       <div class="message">
         <h2>
-          Tạo đề thi mới
+          Đề thi
+          <span class="text-danger" th:text="'(' + ${totalItems} + ')'"></span>
         </h2>
         <div th:if="${success}" id="success-message">
           <p th:text="${success}"></p>
         </div>
+
         <div th:if="${error}" id="error-message">
           <p th:text="${error}"></p>
         </div>
@@ -84,63 +86,157 @@
           });
         </script>
 
-      <div class="exam-crate-form border p-3">
-        <form th:action="@{/teacher/exam/create}" method="post">
+        <div class="search_tool">
+          <input
+            type="text"
+            name="exam"
+            id="search_input"
+            th:value="${search}"
+            placeholder="Tìm kiếm đề thi theo tên"
+          />
+          <a hidden id="red_button" class="search-student">Tìm kiếm</a>
 
-            <div class="examHeaderInfo">
-                <label for="name">Tên đề thi:</label>
-                <input type="text" name="examTitle" id="examTitle" required>
-                <br>
-                <label for="duration"> Thời gian làm bài (phút):</label>
-                <input type="text" name="examDuration" id="examDuration" required>
-            </div>
-            <div class="examQuestionInfo">
-                <div id="questionList" class="p-2"></div>
-                <div id="addquestionButton">
-                    <button id="red_button" type="button" onclick="insertQuestionForm()">Thêm câu hỏi</button>
+          <select id="sort_criteria">
+            <option value="default" th:selected="${sort == 'default'}">
+              Sắp xếp
+            </option>
+            <option value="az" th:selected="${sort == 'az'}">A - Z</option>
+            <option value="za" th:selected="${sort == 'za'}">Z - A</option>
+            <option value="newest" th:selected="${sort == 'newest'}">
+              Mới nhất
+            </option>
+            <option value="oldest" th:selected="${sort == 'oldest'}">
+              Cũ nhất
+            </option>
+          </select>
+          <div class="add-class-wrapper">
+            <a
+              th:href="@{/teacher/createexam}"
+              data-target="#create-exam"
+              id="red_button"
+              class="add-classroom"
+              >+ Tạo Đề thi</a
+            >
+          </div>
+          <a id="red_button" hidden class="sort-student">Áp dụng</a>
+        </div>
+      </div>
+      <div class="info-table">
+        <table>
+          <thead>
+            <tr>
+              <th>STT</th>
+              <th>Mã đề thi</th>
+              <th>Tên đề thi</th>
+              <th>Ngày tạo</th>
+              <th>Thời gian làm bài</th>
+              <th>Trạng thái đề thi</th>
+              <th>Thao tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="exam, iterStat : ${exam}">
+              <td th:text="${iterStat.count}"></td>
+              <td th:text="${exam.examId}"></td>
+              <td th:text="${exam.examTitle}"></td>
+              <td
+                th:text="${#dates.format(exam.examCreatedAt, 'dd/MM/yyyy')}"
+              ></td>
+              <td th:text="${exam.examDuration}"></td>
+              <td>Đang thử nghiệm</td>
+              <td>
+                <div class="d-flex justify-content-around">
+                  <form>
+                    <button
+                      type="button"
+                      th:attr="data-id=${exam.examId}"
+                      class="btn btn-info"
+                      data-toggle="modal"
+                      data-target="#"
+                    >
+                      Chỉnh sửa
+                    </button>
+                  </form>
+                  <form
+                    method="post"
+                    class="prepare-exam-form"
+                  >
+                    <button
+                      type="button"
+                      th:attr="data-id=${exam.examId}"
+                      class="btn btn-danger btn-delete"
+                      data-toggle="modal"
+                      data-target="#delete-exam"
+                    >
+                      vào thi
+                    </button>
+                  </form>
                 </div>
-            </div>
-            <div class="mt-2"></div>
-            <button type="submit" id="red_button">Tạo đề thi</button>
-           
-        </form>
-        <script>
-            //Thêm mới câu hỏi mỗi khi ấn button
-            function insertQuestionForm()
-            {
-                var questionListDiv = document.getElementById("questionList");
-                questionListDiv.innerHTML += `<div class="questionForm border p-1 mt-1">\n
-                    <form action="" method="post">\n
-                        <label for="question">Câu hỏi: </label>
-                        <input type="text" class="form-control" name="question" id="questionTitle" required>\n
-                        <br>\n
-                        <label for="answer">A: </label>\n
-                        <input type="text" class="form-control" name="answer" id="answerA" required>\n
-                        <br>\n
-                        <label for="answer">B: </label>\n
-                        <input type="text" class="form-control" name="answer" id="answerB" required>\n
-                        <br>\n
-                        <label for="answer">C: </label>\n
-                        <input type="text" class="form-control" name="answer" id="answerC" required>\n
-                        <br>\n
-                        <label for="answer">D: </label>\n
-                        <input type="text" class="form-control" name="answer" id="answerD" required>\n
-                        <br>\n
-                    </form>\n
-                </div>\n`
-            }
-        </script>
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
+        <p th:if="${totalItems == 0}" class="text-center mt-4 text-danger">
+          Hiện tại chưa có đề thi nào, hãy nghỉ ngơi!
+        </p>
 
-      
+        <div
+          class="mt-4 d-flex justify-content-center"
+          aria-label="Page navigation example"
+          th:if="${totalItems >= 1}"
+        >
+          <ul class="pagination">
+            <!-- Previous Button -->
+            <li
+              class="page-item"
+              th:classappend="${currentPage == 1} ? 'disabled'"
+            >
+              <a
+                class="page-link"
+                th:href="@{/teacher/classroom(current=${currentPage - 1}, pageSize=${pageSize})}"
+                aria-label="Previous"
+              >
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+
+            <!-- Page Numbers -->
+            <li
+              th:each="i : ${#numbers.sequence(1, totalPages)}"
+              class="page-item"
+              th:classappend="${i == currentPage} ? 'active'"
+            >
+              <a
+                class="page-link"
+                th:href="@{/teacher/classroom(current=${i}, pageSize=${pageSize})}"
+                th:text="${i}"
+              ></a>
+            </li>
+
+            <!-- Next Button -->
+            <li
+              class="page-item"
+              th:classappend="${currentPage == totalPages} ? 'disabled'"
+            >
+              <a
+                class="page-link"
+                th:href="@{/teacher/classroom(current=${currentPage + 1}, pageSize=${pageSize})}"
+                aria-label="Next"
+              >
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
 
     <!-- Modal -->
 
-
     <div
       class="modal fade"
-      id="delete-classroom"
+      id="delete-exam"
       tabindex="-1"
       aria-labelledby="exampleModalLabel"
       aria-hidden="true"
@@ -174,7 +270,6 @@
         </div>
       </div>
     </div>
-
     <script
       src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
       integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
