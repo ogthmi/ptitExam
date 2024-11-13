@@ -34,7 +34,6 @@ public class Constant {
     public static final String TEACHER_SUBDIR = "teacher";
     public static final String PAGE_TEACHER_CLASSROOM = TEACHER_SUBDIR + "/classroom";
     public static final String PAGE_TEACHER_EXAM = TEACHER_SUBDIR + "/exam";
-    public static final String PAGE_TEACHER_EXAM_CREATE = TEACHER_SUBDIR + "/createexam";
     public static final String PAGE_TEACHER_UPDATE_CLASSROOM = TEACHER_SUBDIR + "/update.classroom";
 
     // Student's page

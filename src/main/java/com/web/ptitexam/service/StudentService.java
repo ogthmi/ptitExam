@@ -2,11 +2,12 @@ package com.web.ptitexam.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import com.web.ptitexam.entity.Classroom;
 import com.web.ptitexam.entity.Student;
 import com.web.ptitexam.entity.Teacher;
-
+@Service
 public interface StudentService {
     Student findByStudentId(String studentId);
 

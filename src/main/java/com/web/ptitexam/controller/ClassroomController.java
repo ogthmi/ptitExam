@@ -4,10 +4,12 @@ import com.web.ptitexam.constant.Constant;
 import com.web.ptitexam.dto.ClassroomDTO;
 import com.web.ptitexam.dto.UserDTO;
 import com.web.ptitexam.entity.Classroom;
+import com.web.ptitexam.entity.Exam;
 import com.web.ptitexam.entity.Student;
 import com.web.ptitexam.entity.Teacher;
 import com.web.ptitexam.entity.User;
 import com.web.ptitexam.service.ClassroomService;
+import com.web.ptitexam.service.ExamService;
 import com.web.ptitexam.service.StudentService;
 import com.web.ptitexam.service.UserService;
 
@@ -23,13 +25,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class ClassroomController {
@@ -37,12 +37,14 @@ public class ClassroomController {
     private final UserService userService;
     private final ClassroomService classroomService;
     private final StudentService studentService;
+    private final ExamService examService;
 
     public ClassroomController(UserService userService, ClassroomService classroomService,
-            StudentService studentService) {
+            StudentService studentService, ExamService examService) {
         this.userService = userService;
         this.classroomService = classroomService;
         this.studentService = studentService;
+        this.examService = examService;
     }
 
     @GetMapping(value = Constant.PAGE_TEACHER_CLASSROOM)
@@ -170,6 +172,7 @@ public class ClassroomController {
     @GetMapping(value = Constant.PAGE_TEACHER_CLASSROOM + "/update/{id}")
     public String showUpdateClassroom(Model model, @PathVariable("id") String id,
             @RequestParam(value = "current", defaultValue = "1") int current,
+            @RequestParam(value = "examCurrent", defaultValue = "1") int examCurrent,
             @RequestParam(value = "pageSize", defaultValue = "5") int pageSize,
             @RequestParam(value = "sort", defaultValue = "") String sort,
             @RequestParam(value = "search", defaultValue = "") String search,
@@ -202,23 +205,23 @@ public class ClassroomController {
                 sort = "default";
             }
 
-            Pageable pageable;
+            Pageable StudentPageable;
 
             if (key != null && sort != null) {
                 if ("az".equals(sort) && key != null && !key.isEmpty()) {
-                    pageable = PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.ASC, key));
+                    StudentPageable = PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.ASC, key));
                 } else {
-                    pageable = PageRequest.of(current - 1, pageSize);
+                    StudentPageable = PageRequest.of(current - 1, pageSize);
                 }
 
                 if ("za".equals(sort) && key != null && !key.isEmpty()) {
-                    pageable = PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.DESC, key));
+                    StudentPageable = PageRequest.of(current - 1, pageSize, Sort.by(Sort.Direction.DESC, key));
                 }
             } else {
-                pageable = PageRequest.of(current - 1, pageSize);
+                StudentPageable = PageRequest.of(current - 1, pageSize);
             }
 
-            Page<Student> studentPage = studentService.findByClassrooms(classroom, search, pageable);
+            Page<Student> studentPage = studentService.findByClassrooms(classroom, search, StudentPageable);
 
             model.addAttribute("userDTO", currentUser);
             model.addAttribute("classroom", classroom);
@@ -238,6 +241,18 @@ public class ClassroomController {
 
             // tổng số items
             model.addAttribute("totalItems", studentPage.getTotalElements());
+
+            // Exam Page:
+            Pageable examPageable = PageRequest.of(examCurrent - 1, pageSize);
+            Page<Exam> examPage = examService.findByClassAssigned(classroom, search, examPageable);
+
+            /// TODO: sẽ làm sort sau (too lazy)
+
+            model.addAttribute("exams", examPage.getContent());
+            model.addAttribute("examCurrentPage", examCurrent);
+            model.addAttribute("examPageSize", pageSize);
+            model.addAttribute("examTotalPages", examPage.getTotalPages());
+            model.addAttribute("examTotalItems", examPage.getTotalElements());
 
             return Constant.PAGE_TEACHER_UPDATE_CLASSROOM;
         } catch (Exception e) {
@@ -411,6 +426,7 @@ public class ClassroomController {
     @GetMapping(Constant.PAGE_STUDENT_CLASSROOM + "/view/{id}")
     public String viewClassroomByStudent(@PathVariable String id, Model model,
             @RequestParam(value = "current", defaultValue = "1") int current,
+            @RequestParam(value = "examCurrent", defaultValue = "1") int examCurrent,
             @RequestParam(value = "pageSize", defaultValue = "5") int pageSize,
             @RequestParam(value = "sort", defaultValue = "") String sort,
             @RequestParam(value = "search", defaultValue = "") String search,
@@ -479,6 +495,18 @@ public class ClassroomController {
 
         // tổng số items
         model.addAttribute("totalItems", studentPage.getTotalElements());
+
+        // Exam Page:
+        Pageable examPageable = PageRequest.of(examCurrent - 1, pageSize);
+        Page<Exam> examPage = examService.findByClassAssigned(classroom, search, examPageable);
+
+        /// TODO: sẽ làm sort sau (too lazy)
+
+        model.addAttribute("exams", examPage.getContent());
+        model.addAttribute("examCurrentPage", examCurrent);
+        model.addAttribute("examPageSize", pageSize);
+        model.addAttribute("examTotalPages", examPage.getTotalPages());
+        model.addAttribute("examTotalItems", examPage.getTotalElements());
 
         return Constant.PAGE_STUDENT_VIEW_CLASSROOM;
     }

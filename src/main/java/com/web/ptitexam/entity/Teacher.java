@@ -18,17 +18,6 @@ public class Teacher {
     @OneToMany(mappedBy = "teacher")
     private List<Classroom> classrooms;
 
-    @Column(nullable = false)
-    private String[] examIdList;
-
-    public String[] getExamIdList() {
-        return examIdList;
-    }
-
-    public void setExamIdList(String[] examIdList) {
-        this.examIdList = examIdList;
-    }
-
     public String getTeacherId() {
         return teacherId;
     }
