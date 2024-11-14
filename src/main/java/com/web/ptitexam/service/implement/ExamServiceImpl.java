@@ -1,9 +1,12 @@
 package com.web.ptitexam.service.implement;
 
+import java.util.UUID;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.web.ptitexam.dto.ExamDTO;
 import com.web.ptitexam.entity.Classroom;
 import com.web.ptitexam.entity.Exam;
 import com.web.ptitexam.repository.ExamRepository;
@@ -26,6 +29,23 @@ public class ExamServiceImpl implements ExamService {
     public Page<Exam> findByClassAssigned(Classroom classroom, String search, Pageable pageable) {
         /// TODO: sẽ làm sort sau(quá lười)
         return examRepository.findByClassAssigned(classroom, pageable);
+    }
+
+    @Override
+    public void createExam(ExamDTO examDTO, Classroom classroom) {
+        Exam exam = new Exam();
+        exam.setExamId(UUID.randomUUID().toString());
+        exam.setExamTitle(examDTO.getExamTitle());
+        exam.setClassAssignedId(classroom);
+        exam.setExamDuration(examDTO.getExamDuration());
+
+        examRepository.save(exam);
+
+    }
+
+    @Override
+    public void deleteExamById(String examId) {
+        examRepository.deleteById(examId);
     }
 
 }

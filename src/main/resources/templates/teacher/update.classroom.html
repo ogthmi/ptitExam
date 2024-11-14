@@ -235,38 +235,6 @@
           <span th:text="${classroom.className}"></span> 
           <span class="text-danger" th:text="'(' + ${examTotalItems} + ')'"></span>
         </h2>
-
-        <div class="mt-5">
-          <div class="message">
-            <div th:if="${success}" id="success-message">
-              <p th:text="${success}"></p>
-            </div>
-    
-            <div th:if="${error}" id="error-message">
-              <p th:text="${error}"></p>
-            </div>
-            <script>
-              // Kiểm tra nếu phần tử success-message tồn tại trên trang
-              window.addEventListener("load", function () {
-                var successMessage = document.getElementById("success-message");
-                if (successMessage) {
-                  // Ẩn thông báo sau 5 giây
-                  setTimeout(function () {
-                    successMessage.style.display = "none";
-                  }, 5000);
-                }
-    
-                var errorMessage = document.getElementById("error-message");
-    
-                if (errorMessage) {
-                  // Ẩn thông báo sau 5 giây
-                  setTimeout(function () {
-                    errorMessage.style.display = "none";
-                  }, 5000);
-                }
-              });
-            </script>
-          </div>
     
           <div class="search_tool">
             
@@ -296,14 +264,9 @@
           </div>
 
         <div class="info-table">
-          <button
-            data-toggle="modal"
-            data-target="#add-student"
-            type="button"
-            class="btn btn-danger mb-3"
-          >
-            Thêm đề thi
-          </button>
+          <form th:action="@{'/teacher/classroom/' + ${classroom.classId} + '/exam/create'}">
+            <input type="submit" class="btn btn-danger mb-3" value="Thêm đề thi">
+          </form>
           <table>
             <thead>
               <tr>
@@ -327,14 +290,10 @@
                 <td th:text="${exam.examTitle}"></td>
                 <td th:text="${exam.questions.size()}"></td>
                 <td th:text="${exam.examDuration}"></td>
-
-
-                <td>
-                  <a
-                    class="btn btn-danger"
-                    >Xóa</a
-                  >
-                </td>
+                <td><form th:action="@{'/teacher/classroom/exam/delete/' + ${exam.examId}}" method="post">
+                  <input type="submit" class="btn btn-danger mb-3" value="Xóa">
+                </form></td>
+                
               </tr>
             </tbody>
           </table>

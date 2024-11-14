@@ -2,6 +2,7 @@ package com.web.ptitexam.controller;
 
 import com.web.ptitexam.constant.Constant;
 import com.web.ptitexam.dto.ClassroomDTO;
+import com.web.ptitexam.dto.ExamDTO;
 import com.web.ptitexam.dto.UserDTO;
 import com.web.ptitexam.entity.Classroom;
 import com.web.ptitexam.entity.Exam;
@@ -18,6 +19,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.tomcat.util.bcel.Const;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,11 +27,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class ClassroomController {
@@ -262,6 +267,40 @@ public class ClassroomController {
 
     }
 
+    @GetMapping(value = Constant.PAGE_TEACHER_CLASSROOM + "/{id}/exam/create")
+    public String showExamCreate(Model model, @PathVariable("id") String id) {
+        try {
+            UserDTO currentUser = userService.getCurrentUser();
+            Classroom classroom = classroomService.findByClassId(id);
+            model.addAttribute("examForm", new ExamDTO());
+
+            model.addAttribute("userDTO", currentUser);
+            model.addAttribute("classroom", classroom);
+            if (classroom == null) {
+                return "redirect:/teacher/classroom";
+            }
+
+        } catch (Exception e) {
+        }
+        return Constant.PAGE_TEACHER_UPDATE_EXAM;
+    }
+
+    @PostMapping(value = Constant.PAGE_TEACHER_CLASSROOM + "/{id}/exam/create")
+    public String createExam(@Validated @ModelAttribute("examForm") ExamDTO examDTO, Model model,
+            @PathVariable("id") String id,
+            RedirectAttributes redirectAttributes) {
+
+        try {
+            Classroom classroom = classroomService.findByClassId(id);
+            examService.createExam(examDTO, classroom);
+            redirectAttributes.addFlashAttribute("success", "Tạo đề thi mới thành công");
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", "deo biet chuyen j da xay ra");
+        }
+        return "redirect:/teacher/classroom/update/" + id;
+    }
+
     @PostMapping(Constant.PAGE_TEACHER_CLASSROOM + "/create")
     public String createClassroom(@RequestParam("name") String name, Model model,
             RedirectAttributes redirectAttributes) {
@@ -308,6 +347,20 @@ public class ClassroomController {
 
         redirectAttributes.addFlashAttribute("success", "Cập nhật lớp học thành công.");
         return "redirect:/teacher/classroom";
+    }
+
+    @PostMapping(Constant.PAGE_TEACHER_CLASSROOM + "/exam/delete/{id}")
+    public String deleteExam(@PathVariable("id") String examId, RedirectAttributes redirectAttributes) {
+        // TODO: process POST request
+        Exam exam = examService.findByExamId(examId);
+
+        if (exam == null) {
+            redirectAttributes.addFlashAttribute("error", "Đề thi không tồn tại.");
+        }
+        examService.deleteExamById(examId);
+        redirectAttributes.addFlashAttribute("success", "Xóa đề thi thành công.");
+        String classId = exam.getClassAssignedId().getClassId();
+        return "redirect:/teacher/classroom/update/" + classId;
     }
 
     @PostMapping(Constant.PAGE_TEACHER_CLASSROOM + "/delete/{id}")

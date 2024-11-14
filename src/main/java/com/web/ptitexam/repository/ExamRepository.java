@@ -11,5 +11,8 @@ public interface ExamRepository
         extends JpaRepository<Exam, String> {
     Exam findByExamId(String examId);
 
+    Exam save(Exam exam);
+
+
     Page<Exam> findByClassAssigned(Classroom classroom, Pageable pageable);
 }
