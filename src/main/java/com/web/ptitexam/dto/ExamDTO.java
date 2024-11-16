@@ -10,6 +10,16 @@ public class ExamDTO {
     private int examDuration;
     private ArrayList<Question> questionList;
 
+    private int questionCount;
+
+    public int getQuestionCount() {
+        return questionCount;
+    }
+
+    public void setQuestionCount(int questionCount) {
+        this.questionCount = questionCount;
+    }
+
     public String getExamTitle() {
         return examTitle;
     }

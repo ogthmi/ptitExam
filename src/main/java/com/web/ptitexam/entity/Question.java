@@ -18,40 +18,74 @@ public class Question {
     @Column(nullable = false)
     private String questionId;
 
-    @ManyToOne
-    @JoinColumn(name = "exam_id")
-    private Exam examId;
-
     @Column(nullable = false)
     private String questionContent;
 
     @Column(nullable = false)
-    private String[] answersContent;
+    private String answersA;
+    @Column(nullable = false)
+    private String answersB;
+    @Column(nullable = false)
+    private String answersC;
+    @Column(nullable = false)
+    private String answersD;
 
     @Column(nullable = false)
-    private int correctAnswerIndex;
+    private String correctAnswer;
+
+    public String getAnswersA() {
+        return answersA;
+    }
+
+    public void setAnswersA(String answersA) {
+        this.answersA = answersA;
+    }
+
+    public String getAnswersB() {
+        return answersB;
+    }
+
+    public void setAnswersB(String answersB) {
+        this.answersB = answersB;
+    }
+
+    public String getAnswersC() {
+        return answersC;
+    }
+
+    public void setAnswersC(String answersC) {
+        this.answersC = answersC;
+    }
+
+    public String getAnswersD() {
+        return answersD;
+    }
+
+    public void setAnswersD(String answersD) {
+        this.answersD = answersD;
+    }
+
+    public String getCorrectAnswer() {
+        return correctAnswer;
+    }
+
+    public void setCorrectAnswer(String correctAnswer) {
+        this.correctAnswer = correctAnswer;
+    }
 
     @JsonFormat(pattern = "dd/MM/yyyy", timezone = "GMT+7")
     private Instant questionCreatedAt;
+
+    public Question() {
+        questionContent = "";
+    }
 
     public void setQuestionId(String questionId) {
         this.questionId = questionId;
     }
 
-    public void setExam(Exam examId) {
-        this.examId = examId;
-    }
-
     public void setQuestionContent(String questionContent) {
         this.questionContent = questionContent;
-    }
-
-    public void setAnswersContent(String[] answersContent) {
-        this.answersContent = answersContent;
-    }
-
-    public void setCorrectAnswerIndex(int correctAnswerIndex) {
-        this.correctAnswerIndex = correctAnswerIndex;
     }
 
     public void setQuestionCreatedAt(Instant questionCreatedAt) {
@@ -62,23 +96,11 @@ public class Question {
         return questionId;
     }
 
-    public Exam getExam() {
-        return examId;
-    }
-
     public String getQuestionContent() {
         return questionContent;
     }
 
-    public String[] getAnswersContent() {
-        return answersContent;
-    }
-
-    public int getCorrectAnswerIndex() {
-        return correctAnswerIndex;
-    }
-
-    public Instant getQuestionCreatedAt() {
+    Instant getQuestionCreatedAt() {
         return questionCreatedAt;
     }
 }

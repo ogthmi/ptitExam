@@ -30,6 +30,9 @@ public class Exam {
     @Column(nullable = false)
     private int examDuration;
 
+    @Column(nullable = false)
+    private int questionCount;
+
     @ManyToOne
     @JoinColumn(name = "class_id")
     private Classroom classAssigned;
@@ -37,6 +40,14 @@ public class Exam {
     @ManyToMany
     @JoinTable(name = "exam_questions", joinColumns = @JoinColumn(name = "exam_id"), inverseJoinColumns = @JoinColumn(name = "question_id"))
     private List<Question> questions;
+
+    public int getQuestionCount() {
+        return questionCount;
+    }
+
+    public void setQuestionCount(int questionCount) {
+        this.questionCount = questionCount;
+    }
 
     public List<Question> getQuestions() {
         return questions;

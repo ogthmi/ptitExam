@@ -1,5 +1,6 @@
 package com.web.ptitexam.service.implement;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.web.ptitexam.dto.ExamDTO;
 import com.web.ptitexam.entity.Classroom;
 import com.web.ptitexam.entity.Exam;
+import com.web.ptitexam.entity.Question;
 import com.web.ptitexam.repository.ExamRepository;
 import com.web.ptitexam.service.ExamService;
 
@@ -32,13 +34,14 @@ public class ExamServiceImpl implements ExamService {
     }
 
     @Override
-    public void createExam(ExamDTO examDTO, Classroom classroom) {
+    public void createExam(ExamDTO examDTO, Classroom classroom, List<Question> questions) {
         Exam exam = new Exam();
         exam.setExamId(UUID.randomUUID().toString());
         exam.setExamTitle(examDTO.getExamTitle());
         exam.setClassAssignedId(classroom);
         exam.setExamDuration(examDTO.getExamDuration());
-
+        exam.setQuestionCount(examDTO.getQuestionCount());
+        exam.setQuestions(questions);
         examRepository.save(exam);
 
     }

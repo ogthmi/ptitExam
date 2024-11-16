@@ -151,15 +151,15 @@
         </div>
         <div class=".d-flex">
           <form
-            th:action="@{'/teacher/classroom/' + ${classroom.classId} + '/exam/create'}"
-            method="post"
+            th:action="@{'/teacher/classroom/' + ${classroom.classId} + '/exam/create/question'}"
+            method="get"
             th:object="${examForm}"
           >
             <div class="form-group">
               <label class="h5" for="examTitle">Tên đề thi:</label>
               <input class="form-control" type="text" th:field="*{examTitle}" />
             </div>
-            <div class="form-group">
+            <div class="form-group mb-1">
               <label class="h5" for="examDuration">Thời gian:</label>
               <input
                 class="form-control"
@@ -167,19 +167,22 @@
                 th:field="*{examDuration}"
               />
             </div>
-            <div
-              id="question_form"
-              th:each="question, iterStat : ${examForm.questionList}"
-            ></div>
-            <input
-              onclick="createNewQuestion()"
-              class="btn primary mb-3"
-              value="Thêm câu hỏi"
-            />
+
+            <div class="form-group mb-1">
+              <label class="h5" for="examDuration">Số lượng câu hỏi:</label>
+              <input
+                class="form-control"
+                type="text"
+                th:field="*{questionCount}"
+              />
+            </div>
+            <hr />
+            <div id="question_form" class="mb-3"></div>
+            </button>
             <input
               type="submit"
               class="btn btn-danger mb-3"
-              value="Tạo đề thi"
+              value="Tiếp tục"
             />
           </form>
         </div>
@@ -188,14 +191,6 @@
   </body>
 
   <script>
-    function createNewQuestion() {
-      var form = `<div>
-                <label for="questionContent">Câu hỏi ${iterStat.index}:</label>
-                <textarea class="form-control" rows="3" type="text" th:field="*{tasks[__${iterStat.index}__].name}" placeholder="Nội dung câu hỏi..." />
-            </div>`;
-      document.getElementById("question_form").appendChild(form);
-    }
-
     document.addEventListener("DOMContentLoaded", function () {
       const moreTools = document.getElementById("user_more_tools");
       const userMenu = moreTools.querySelector(".user-menu");
@@ -211,111 +206,6 @@
         if (!moreTools.contains(event.target)) {
           // Kiểm tra nếu không bấm vào trong menu
           userMenu.classList.remove("show"); // Xóa lớp 'show' để ẩn menu
-        }
-      });
-
-      // Tìm kiếm sinh viên
-
-      const studentInput = document.getElementById("studentId-inp");
-      const dropdown = document.getElementById("student-dropdown");
-
-      let debounceTimeout;
-
-      studentInput.addEventListener("input", function () {
-        clearTimeout(debounceTimeout);
-        debounceTimeout = setTimeout(() => {
-          const query = studentInput.value.trim();
-          if (query) {
-            fetch(`/ptit-exam/api/student/search?id=${query}`)
-              .then((response) => response.json())
-              .then((data) => {
-                dropdown.innerHTML = "";
-                if (data.length) {
-                  data.forEach((student) => {
-                    const item = document.createElement("a");
-                    item.classList.add("dropdown-item", "text-danger");
-                    item.href = "#";
-                    item.textContent = student.studentId + " - " + student.name;
-
-                    item.addEventListener("click", function () {
-                      studentInput.value = student.studentId;
-                      dropdown.classList.remove("show");
-                    });
-                    dropdown.appendChild(item);
-                  });
-                  dropdown.classList.add("show");
-                } else {
-                  const noResultItem = document.createElement("div");
-                  noResultItem.classList.add("dropdown-item", "text-muted");
-                  noResultItem.textContent =
-                    "Không tìm thấy sinh viên nào có mã tương ứng";
-                  dropdown.appendChild(noResultItem);
-                  dropdown.classList.add("show");
-                }
-              })
-              .catch((error) => {
-                dropdown.classList.remove("show");
-              });
-          } else {
-            dropdown.classList.remove("show");
-          }
-        }, 200); // 300ms debounce time
-      });
-
-      document.addEventListener("click", function (e) {
-        if (!studentInput.contains(e.target) && !dropdown.contains(e.target)) {
-          dropdown.classList.remove("show");
-        }
-      });
-
-      // Sắp xếp sinh viên
-
-      const sortButton = document.querySelector(".sort-student");
-      const sortOrderSelect = document.getElementById("sort_order");
-      const sortCriteriaSelect = document.getElementById("sort_criteria");
-
-      sortButton.addEventListener("click", function () {
-        const sortOrder = sortOrderSelect.value;
-        const sortCriteria = sortCriteriaSelect.value;
-
-        let queryParams = new URLSearchParams(window.location.search);
-
-        if (sortOrder !== "default" && sortCriteria !== "default") {
-          queryParams.set("sort", sortOrder);
-          queryParams.set("key", sortCriteria);
-        } else {
-          queryParams.delete("sort");
-          queryParams.delete("key");
-        }
-
-        window.location.search = queryParams.toString();
-      });
-
-      // Tìm kiếm lớp sinh viên
-
-      const searchButton = document.querySelector(".search-student");
-      const searchInput = document.getElementById("search_input");
-
-      searchButton.addEventListener("click", function () {
-        const searchInput = document.getElementById("search_input");
-        const searchValue = searchInput.value;
-
-        let queryParams = new URLSearchParams(window.location.search);
-
-        queryParams.delete("current");
-        queryParams.delete("pageSize");
-        if (searchValue) {
-          queryParams.set("search", searchValue);
-        } else {
-          queryParams.delete("search");
-        }
-
-        window.location.search = queryParams.toString();
-      });
-
-      searchInput.addEventListener("keydown", function (e) {
-        if (e.key === "Enter") {
-          searchButton.click();
         }
       });
     });
