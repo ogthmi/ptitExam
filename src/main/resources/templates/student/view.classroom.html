@@ -28,8 +28,6 @@
         <img th:src="@{/image/homepage/PTIT_LOGO_WHITE.png}" alt="PTIT Logo" />
         <div>
           <a th:href="@{/student/classroom}">Lớp học</a>
-          <a>Đề thi</a>
-          <a>Ôn tập</a>
         </div>
       </div>
       <div class="nav_user_info">
@@ -263,14 +261,6 @@
           </div>
 
         <div class="info-table">
-          <button
-            data-toggle="modal"
-            data-target="#add-student"
-            type="button"
-            class="btn btn-danger mb-3"
-          >
-            Thêm đề thi
-          </button>
           <table>
             <thead>
               <tr>
@@ -298,8 +288,9 @@
 
                 <td>
                   <a
+                  th:href="@{'/student/exam/' + ${exam.examId} +'/prepare'}"
                     class="btn btn-danger"
-                    >Xóa</a
+                    >Vào thi</a
                   >
                 </td>
               </tr>
@@ -318,7 +309,7 @@
               <!-- Previous Button -->
               <li class="page-item" th:classappend="${examCurrentPage == 1} ? 'disabled'">
                   <a class="page-link"
-                    th:href="@{/teacher/classroom/update/{id}(id=${classroom.classId}, examCurrent=${examCurrentPage - 1}, pageSize=${pageSize})}"
+                    th:href="@{/student/classroom/view/{id}(id=${classroom.classId}, examCurrent=${examCurrentPage - 1}, pageSize=${pageSize})}"
                     aria-label="Previous">
                       <span aria-hidden="true">&laquo;</span>
                   </a>
@@ -327,14 +318,14 @@
               <!-- Page Numbers -->
               <li th:each="i : ${#numbers.sequence(1, examTotalPages)}" class="page-item" th:classappend="${i == examCurrentPage} ? 'active'">
                   <a class="page-link"
-                    th:href="@{/teacher/classroom/update/{id}(id=${classroom.classId}, examCurrent=${i}, pageSize=${pageSize})}"
+                    th:href="@{/student/classroom/view/{id}(id=${classroom.classId}, examCurrent=${i}, pageSize=${pageSize})}"
                     th:text="${i}"></a>
               </li>
           
               <!-- Next Button -->
               <li class="page-item" th:classappend="${examCurrentPage == examTotalPages} ? 'disabled'">
                   <a class="page-link"
-                    th:href="@{/teacher/classroom/update/{id}(id=${classroom.classId}, examCurrent=${examCurrentPage + 1}, pageSize=${pageSize})}"
+                    th:href="@{/student/classroom/view/{id}(id=${classroom.classId}, examCurrent=${examCurrentPage + 1}, pageSize=${pageSize})}"
                     aria-label="Next">
                       <span aria-hidden="true">&raquo;</span>
                   </a>

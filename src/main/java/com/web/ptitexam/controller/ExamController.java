@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.web.ptitexam.constant.Constant;
+import com.web.ptitexam.dto.AnswerDTO;
 import com.web.ptitexam.dto.ExamDTO;
 import com.web.ptitexam.dto.QuestionDTO;
 import com.web.ptitexam.dto.UserDTO;
@@ -136,6 +137,38 @@ public class ExamController {
         redirectAttributes.addFlashAttribute("success", "Xóa đề thi thành công.");
         String classId = exam.getClassAssignedId().getClassId();
         return "redirect:/teacher/classroom/update/" + classId;
+    }
+
+    @GetMapping(value = Constant.STUDENT_SUBDIR + "/exam/{id}/prepare")
+    public String showPrepareExamPage(@PathVariable("id") String examId, Model model) {
+        try {
+            UserDTO currentUser = userService.getCurrentUser();
+            Exam exam = examService.findByExamId(examId);
+            model.addAttribute("userDTO", currentUser);
+            model.addAttribute("exam", exam);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Constant.PAGE_STUDENT_PREPARE_EXAM;
+    }
+
+    @GetMapping(value = Constant.STUDENT_SUBDIR + "/exam/{id}/contest")
+    public String showContestExamPage(@PathVariable("id") String examId, Model model) {
+        try {
+            UserDTO currentUser = userService.getCurrentUser();
+            Exam exam = examService.findByExamId(examId);
+            model.addAttribute("userDTO", currentUser);
+            model.addAttribute("questionContent", exam.getQuestions());
+            model.addAttribute("examId", exam.getExamId());
+            String[] answers = new String[exam.getQuestionCount()];
+            for (int i = 0; i < answers.length; i++) {
+                answers[i] = "";
+            }
+            model.addAttribute("answerDTO", new AnswerDTO(questionCount) );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Constant.PAGE_STUDENT_CONTEST;
     }
 
 }

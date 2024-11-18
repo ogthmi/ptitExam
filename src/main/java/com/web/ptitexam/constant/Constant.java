@@ -37,10 +37,12 @@ public class Constant {
     public static final String PAGE_TEACHER_UPDATE_EXAM = TEACHER_SUBDIR + "/update.exam";
     public static final String PAGE_TEACHER_UPDATE_QUESTION = TEACHER_SUBDIR + "/update.exam.question";
 
-
     // Student's page
     public static final String STUDENT_SUBDIR = "student";
     public static final String PAGE_STUDENT_CLASSROOM = STUDENT_SUBDIR + "/classroom";
 
     public static final String PAGE_STUDENT_VIEW_CLASSROOM = STUDENT_SUBDIR + "/view.classroom";
+    public static final String PAGE_STUDENT_PREPARE_EXAM = STUDENT_SUBDIR + "/view.exam";
+    public static final String PAGE_STUDENT_CONTEST = STUDENT_SUBDIR + "/view.exam.contest";
+    public static final String PAGE_STUDENT_CONTEST_RESULT = STUDENT_SUBDIR + "/view.exam.result";
 }
