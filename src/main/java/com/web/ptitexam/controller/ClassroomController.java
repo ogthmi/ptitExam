@@ -8,12 +8,14 @@ import com.web.ptitexam.dto.UserDTO;
 import com.web.ptitexam.entity.Classroom;
 import com.web.ptitexam.entity.Exam;
 import com.web.ptitexam.entity.Question;
+import com.web.ptitexam.entity.Result;
 import com.web.ptitexam.entity.Student;
 import com.web.ptitexam.entity.Teacher;
 import com.web.ptitexam.entity.User;
 import com.web.ptitexam.service.ClassroomService;
 import com.web.ptitexam.service.ExamService;
 import com.web.ptitexam.service.QuestionService;
+import com.web.ptitexam.service.ResultService;
 import com.web.ptitexam.service.StudentService;
 import com.web.ptitexam.service.UserService;
 
@@ -45,13 +47,15 @@ public class ClassroomController {
     private final ClassroomService classroomService;
     private final StudentService studentService;
     private final ExamService examService;
+    private final ResultService resultService;
 
     public ClassroomController(UserService userService, ClassroomService classroomService,
-            StudentService studentService, ExamService examService) {
+            StudentService studentService, ExamService examService, ResultService resultService) {
         this.userService = userService;
         this.classroomService = classroomService;
         this.studentService = studentService;
         this.examService = examService;
+        this.resultService = resultService;
     }
 
     @GetMapping(value = Constant.PAGE_TEACHER_CLASSROOM)
@@ -507,9 +511,21 @@ public class ClassroomController {
         Pageable examPageable = PageRequest.of(examCurrent - 1, pageSize);
         Page<Exam> examPage = examService.findByClassAssigned(classroom, search, examPageable);
 
+        List<String> resultExamId = new ArrayList<>();
+
+        for (Exam exam : examPage) {
+
+            List<Result> tempList = resultService.findByExamIdAndStudent(exam.getExamId(),
+                    userService.findByUsername(currentUser.getUsername()).getStudent());
+            for (Result result : tempList) {
+                resultExamId.add(result.getExam().getExamId());
+            }
+        }
+
         /// TODO: sẽ làm sort sau (too lazy)
 
         model.addAttribute("exams", examPage.getContent());
+        model.addAttribute("result", resultExamId);
         model.addAttribute("examCurrentPage", examCurrent);
         model.addAttribute("examPageSize", pageSize);
         model.addAttribute("examTotalPages", examPage.getTotalPages());

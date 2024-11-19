@@ -1,39 +1,13 @@
-package com.web.ptitexam.entity;
+package com.web.ptitexam.dto;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.web.ptitexam.entity.Exam;
+import com.web.ptitexam.entity.Student;
 
-@Entity
-@Table(name = "result")
-public class Result {
-    @Id
-    private String resultId;
-
-    @ManyToOne
-    @JoinColumn(name = "exam_id")
+public class ResultDTO {
     private Exam exam;
-
-    @ManyToOne
-    @JoinColumn(name = "student_id")
     private Student student;
-
-    @Column(nullable = false)
     private double score;
-
-    @Column(nullable = false)
     private int correctAnswerCount;
-
-    public String getResultId() {
-        return resultId;
-    }
-
-    public void setResultId(String resultId) {
-        this.resultId = resultId;
-    }
 
     public Exam getExam() {
         return exam;

@@ -272,9 +272,9 @@
                 <th>Thao tác</th>
               </tr>
             </thead>
-            <tbody>
-              <tr th:each="exam, iterStat : ${exams}">
-                <td th:text="${iterStat.count}"></td>
+            <tbody  >
+              <tr th:style="${result.contains(exam.examId)} ? 'background-color: #86c681' : ''" th:each="exam, iterStat : ${exams}" >
+                  <td  th:text="${iterStat.count}"></td>
                 <td>
                   <a
                     th:text="${exam.examId}"
@@ -284,8 +284,6 @@
                 <td th:text="${exam.examTitle}"></td>
                 <td th:text="${exam.questions.size()}"></td>
                 <td th:text="${exam.examDuration}"></td>
-
-
                 <td>
                   <a
                   th:href="@{'/student/exam/' + ${exam.examId} +'/prepare'}"
@@ -293,6 +291,8 @@
                     >Vào thi</a
                   >
                 </td>
+                
+                
               </tr>
             </tbody>
           </table>

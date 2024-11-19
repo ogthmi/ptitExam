@@ -18,13 +18,16 @@ import com.web.ptitexam.constant.Constant;
 import com.web.ptitexam.dto.AnswerDTO;
 import com.web.ptitexam.dto.ExamDTO;
 import com.web.ptitexam.dto.QuestionDTO;
+import com.web.ptitexam.dto.ResultDTO;
 import com.web.ptitexam.dto.UserDTO;
 import com.web.ptitexam.entity.Classroom;
 import com.web.ptitexam.entity.Exam;
 import com.web.ptitexam.entity.Question;
+import com.web.ptitexam.entity.User;
 import com.web.ptitexam.service.ClassroomService;
 import com.web.ptitexam.service.ExamService;
 import com.web.ptitexam.service.QuestionService;
+import com.web.ptitexam.service.ResultService;
 import com.web.ptitexam.service.StudentService;
 import com.web.ptitexam.service.UserService;
 
@@ -35,17 +38,20 @@ public class ExamController {
     private final ClassroomService classroomService;
     private final ExamService examService;
     private final QuestionService questionService;
+    private final ResultService resultService;
 
     private String examTitle;
     private int examDuration;
     private int questionCount;
 
     public ExamController(UserService userService, ClassroomService classroomService,
-            StudentService studentService, ExamService examService, QuestionService questionService) {
+            StudentService studentService, ExamService examService, QuestionService questionService,
+            ResultService resultService) {
         this.userService = userService;
         this.classroomService = classroomService;
         this.examService = examService;
         this.questionService = questionService;
+        this.resultService = resultService;
     }
 
     @GetMapping(value = Constant.PAGE_TEACHER_CLASSROOM + "/{id}/exam/create")
@@ -164,11 +170,46 @@ public class ExamController {
             for (int i = 0; i < answers.length; i++) {
                 answers[i] = "";
             }
-            model.addAttribute("answerDTO", new AnswerDTO(questionCount) );
+            model.addAttribute("answerDTO", new AnswerDTO(exam.getQuestionCount()));
         } catch (Exception e) {
             e.printStackTrace();
         }
         return Constant.PAGE_STUDENT_CONTEST;
+    }
+
+    @PostMapping(value = Constant.STUDENT_SUBDIR + "/exam/{id}/confirm")
+    public String showResultPage(@PathVariable("id") String examId,
+            @Validated @ModelAttribute("answerDTO") AnswerDTO answerDTO, Model model) {
+        try {
+            UserDTO currentUser = userService.getCurrentUser();
+            Exam exam = examService.findByExamId(examId);
+            User student = userService.findByUsername(currentUser.getUsername());
+
+            double score = 0;
+            int correctAnswerCount = 0;
+            for (int i = 0; i < exam.getQuestionCount(); i++) {
+                if (answerDTO.getUserAnswers()[i].equals(exam.getQuestions().get(i).getCorrectAnswer())) {
+                    correctAnswerCount++;
+                }
+            }
+            score = correctAnswerCount / exam.getQuestionCount() * 1.0;
+
+            ResultDTO resultDTO = new ResultDTO();
+            resultDTO.setCorrectAnswerCount(correctAnswerCount);
+            resultDTO.setExam(exam);
+            resultDTO.setStudent(student.getStudent());
+            resultDTO.setScore(score);
+            resultService.createResult(resultDTO);
+            model.addAttribute("userDTO", currentUser);
+            // System.out.println(currentUser.getLastname());
+            model.addAttribute("correctAnswerCount", correctAnswerCount);
+            model.addAttribute("quesionCount", exam.getQuestionCount());
+            model.addAttribute("score", score);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return Constant.PAGE_STUDENT_CONTEST_RESULT;
     }
 
 }

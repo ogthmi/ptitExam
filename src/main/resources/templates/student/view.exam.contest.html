@@ -67,8 +67,15 @@
       <div class="mt-1 mb-5 border rounded">
         <form
           th:action="@{'/student/exam/' + ${examId} +'/confirm'}"
+          method="post"
           th:object="${answerDTO}"
         >
+          <input
+            type="text"
+            th:field="*{questionCount}"
+            th:value="1"
+            hidden
+          />
           <div
             class="p-2 px-3 pb-3 questionContent"
             th:each=" question , iterStat: ${questionContent}"
@@ -135,7 +142,11 @@
             </div>
             <hr />
           </div>
-          <input type="submit" class=" mx-3 mb-5 btn btn-danger mb-3" value="Nộp bài" />
+          <input
+            type="submit"
+            class="mx-3 mb-5 btn btn-danger mb-3"
+            value="Nộp bài"
+          />
         </form>
       </div>
     </div>
