@@ -19,7 +19,7 @@
       <div class="nav_function">
         <img th:src="@{/image/homepage/PTIT_LOGO_WHITE.png}" alt="PTIT Logo" />
         <div>
-          <a th:href="@{/teacher/classroom}">Lớp học</a>
+          <a th:href="@{/student/classroom}">Lớp học</a>
           <a th:href="@{/student/history}">Lịch sử</a>
 
 
@@ -113,7 +113,7 @@
               <td th:text="${result.exam.examTitle}"></td>
 
               <td th:text="${{result.resultCreatedAt}}"></td>
-              <td th:text="${result.correctAnswerCount} + '/' +  10 / ${result.score}"  ></td>
+              <td th:text="${result.correctAnswerCount} + '/' +  ${result.exam.questions.size()}"  ></td>
               <td th:text="${result.score} % 1 == 0? ${result.score} :${#numbers.formatDecimal(result.score, 0, 2)}"></td>
             </tr>
           </tbody>
