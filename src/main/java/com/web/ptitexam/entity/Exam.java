@@ -1,6 +1,7 @@
 package com.web.ptitexam.entity;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -25,7 +26,7 @@ public class Exam {
     private String examTitle;
 
     @JsonFormat(pattern = "dd/MM/yyyy", timezone = "GMT+7")
-    private Instant examCreatedAt;
+    private LocalDateTime examCreatedAt;
 
     @Column(nullable = false)
     private int examDuration;
@@ -81,11 +82,11 @@ public class Exam {
         this.examTitle = examTitle;
     }
 
-    public Instant getExamCreatedAt() {
+    public LocalDateTime getExamCreatedAt() {
         return examCreatedAt;
     }
 
-    public void setExamCreatedAt(Instant examCreatedAt) {
+    public void setExamCreatedAt(LocalDateTime examCreatedAt) {
         this.examCreatedAt = examCreatedAt;
     }
 

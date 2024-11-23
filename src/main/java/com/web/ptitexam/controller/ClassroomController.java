@@ -525,7 +525,7 @@ public class ClassroomController {
         /// TODO: sẽ làm sort sau (too lazy)
 
         model.addAttribute("exams", examPage.getContent());
-        model.addAttribute("result", resultExamId);
+        model.addAttribute("resultId", resultExamId);
         model.addAttribute("examCurrentPage", examCurrent);
         model.addAttribute("examPageSize", pageSize);
         model.addAttribute("examTotalPages", examPage.getTotalPages());

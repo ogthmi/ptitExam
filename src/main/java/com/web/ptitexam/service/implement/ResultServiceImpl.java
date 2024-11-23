@@ -1,5 +1,8 @@
 package com.web.ptitexam.service.implement;
 
+import java.time.Clock;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,6 +35,7 @@ public class ResultServiceImpl implements ResultService {
         result.setStudent(resultDTO.getStudent());
         result.setCorrectAnswerCount(resultDTO.getCorrectAnswerCount());
         result.setScore(resultDTO.getScore());
+        result.setResultCreatedAt(LocalDateTime.now());
 
         resultRepository.save(result);
     }

@@ -147,8 +147,16 @@ public class ExamController {
 
     @GetMapping(value = Constant.STUDENT_SUBDIR + "/exam/{id}/prepare")
     public String showPrepareExamPage(@PathVariable("id") String examId, Model model) {
+
         try {
             UserDTO currentUser = userService.getCurrentUser();
+
+            User student = userService.findByUsername(currentUser.getUsername());
+
+            if (resultService.findByExamIdAndStudent(examId, student.getStudent()).size() != 0) {
+                return Constant.ERROR_PAGE;
+            }
+
             Exam exam = examService.findByExamId(examId);
             model.addAttribute("userDTO", currentUser);
             model.addAttribute("exam", exam);
@@ -163,6 +171,13 @@ public class ExamController {
         try {
             UserDTO currentUser = userService.getCurrentUser();
             Exam exam = examService.findByExamId(examId);
+
+            User student = userService.findByUsername(currentUser.getUsername());
+
+            if (resultService.findByExamIdAndStudent(examId, student.getStudent()).size() != 0) {
+                return Constant.ERROR_PAGE;
+            }
+
             model.addAttribute("userDTO", currentUser);
             model.addAttribute("questionContent", exam.getQuestions());
             model.addAttribute("examId", exam.getExamId());
@@ -183,7 +198,13 @@ public class ExamController {
         try {
             UserDTO currentUser = userService.getCurrentUser();
             Exam exam = examService.findByExamId(examId);
+
+
             User student = userService.findByUsername(currentUser.getUsername());
+
+            if (resultService.findByExamIdAndStudent(examId, student.getStudent()).size() != 0) {
+                return Constant.ERROR_PAGE;
+            }
 
             double score = 0;
             int correctAnswerCount = 0;
@@ -192,7 +213,7 @@ public class ExamController {
                     correctAnswerCount++;
                 }
             }
-            score = correctAnswerCount / exam.getQuestionCount() * 1.0;
+            score = correctAnswerCount * 1.0 / exam.getQuestionCount() * 10;
 
             ResultDTO resultDTO = new ResultDTO();
             resultDTO.setCorrectAnswerCount(correctAnswerCount);
@@ -203,7 +224,7 @@ public class ExamController {
             model.addAttribute("userDTO", currentUser);
             // System.out.println(currentUser.getLastname());
             model.addAttribute("correctAnswerCount", correctAnswerCount);
-            model.addAttribute("quesionCount", exam.getQuestionCount());
+            model.addAttribute("questionCount", exam.getQuestionCount());
             model.addAttribute("score", score);
         } catch (Exception e) {
             e.printStackTrace();

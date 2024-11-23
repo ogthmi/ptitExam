@@ -273,6 +273,7 @@
                 <th>STT</th>
                 <th>Mã đề thi</th>
                 <th>Tên đề thi</th>
+                <th>Thời gian tạo</th>
                 <th>Số lượng câu</th>
                 <th>Thời gian</th>
                 <th>Thao tác</th>
@@ -288,6 +289,7 @@
                   </a>
                 </td>
                 <td th:text="${exam.examTitle}"></td>
+                <td th:text="${{exam.examCreatedAt}}"></td>
                 <td th:text="${exam.questionCount}"></td>
                 <td th:text="${exam.examDuration}"></td>
                 <td><form th:action="@{'/teacher/classroom/exam/delete/' + ${exam.examId}}" method="post">

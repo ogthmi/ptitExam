@@ -45,4 +45,7 @@ public class Constant {
     public static final String PAGE_STUDENT_PREPARE_EXAM = STUDENT_SUBDIR + "/view.exam";
     public static final String PAGE_STUDENT_CONTEST = STUDENT_SUBDIR + "/view.exam.contest";
     public static final String PAGE_STUDENT_CONTEST_RESULT = STUDENT_SUBDIR + "/view.exam.result";
+
+    // Error Page
+    public static final String ERROR_PAGE = "403/deny.html";
 }

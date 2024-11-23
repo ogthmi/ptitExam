@@ -265,31 +265,33 @@
             <thead>
               <tr>
                 <th>STT</th>
-                <th>Mã đề thi</th>
                 <th>Tên đề thi</th>
+                <th>Thời gian tạo</th>
                 <th>Số lượng câu</th>
                 <th>Thời gian</th>
                 <th>Thao tác</th>
               </tr>
             </thead>
             <tbody  >
-              <tr th:style="${result.contains(exam.examId)} ? 'background-color: #86c681' : ''" th:each="exam, iterStat : ${exams}" >
+              <tr th:style="${resultId.contains(exam.examId)} ? 'background-color: #86c681' : ''" th:each="exam, iterStat : ${exams}" >
                   <td  th:text="${iterStat.count}"></td>
-                <td>
-                  <a
-                    th:text="${exam.examId}"
-                  >
-                  </a>
-                </td>
                 <td th:text="${exam.examTitle}"></td>
+                <td th:text="${{exam.examCreatedAt}}"></td>
+
                 <td th:text="${exam.questions.size()}"></td>
                 <td th:text="${exam.examDuration}"></td>
                 <td>
-                  <a
+                  <div th:if="${resultId.contains(exam.examId)}">
+                    Đã làm
+                  </div>
+                  <div th:unless="${resultId.contains(exam.examId)}">
+                    <a
                   th:href="@{'/student/exam/' + ${exam.examId} +'/prepare'}"
                     class="btn btn-danger"
                     >Vào thi</a
                   >
+                  </div>
+                  
                 </td>
                 
                 

@@ -1,5 +1,10 @@
 package com.web.ptitexam.entity;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -26,6 +31,17 @@ public class Result {
 
     @Column(nullable = false)
     private int correctAnswerCount;
+
+    @JsonFormat(pattern = "dd/MM/yyyy", timezone = "GMT+7")
+    private LocalDateTime resultCreateAt;
+
+    public LocalDateTime getResultCreatedAt() {
+        return resultCreateAt;
+    }
+
+    public void setResultCreatedAt(LocalDateTime resultCreateAt) {
+        this.resultCreateAt = resultCreateAt;
+    }
 
     public String getResultId() {
         return resultId;
