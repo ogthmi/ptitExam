@@ -28,6 +28,7 @@
         <img th:src="@{/image/homepage/PTIT_LOGO_WHITE.png}" alt="PTIT Logo" />
         <div>
           <a th:href="@{/teacher/classroom}">Lớp học</a>
+          <a th:href="@{/teacher/history}">Lịch sử</a>
         </div>
       </div>
       <div class="nav_user_info">
@@ -175,7 +176,7 @@
                   >
                   </a>
                 </td>
-                <td th:text="${student.user.firstname} + ${student.user.lastname}"></td>
+                <td th:text="${student.user.firstname} + ' ' + ${student.user.lastname}"></td>
                 <td th:text="${student.major}"></td>
                 <td th:text="${student.className}"></td>
                 <td>

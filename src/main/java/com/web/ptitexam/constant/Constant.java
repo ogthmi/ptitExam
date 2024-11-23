@@ -36,6 +36,7 @@ public class Constant {
     public static final String PAGE_TEACHER_UPDATE_CLASSROOM = TEACHER_SUBDIR + "/update.classroom";
     public static final String PAGE_TEACHER_UPDATE_EXAM = TEACHER_SUBDIR + "/update.exam";
     public static final String PAGE_TEACHER_UPDATE_QUESTION = TEACHER_SUBDIR + "/update.exam.question";
+    public static final String PAGE_TEACHER_EXAM_HISTORY = TEACHER_SUBDIR + "/exam_history";
 
     // Student's page
     public static final String STUDENT_SUBDIR = "student";
@@ -45,6 +46,8 @@ public class Constant {
     public static final String PAGE_STUDENT_PREPARE_EXAM = STUDENT_SUBDIR + "/view.exam";
     public static final String PAGE_STUDENT_CONTEST = STUDENT_SUBDIR + "/view.exam.contest";
     public static final String PAGE_STUDENT_CONTEST_RESULT = STUDENT_SUBDIR + "/view.exam.result";
+    public static final String PAGE_STUDENT_EXAM_HISTORY = STUDENT_SUBDIR + "/exam_history";
+
 
     // Error Page
     public static final String ERROR_PAGE = "403/deny.html";

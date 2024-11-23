@@ -1,5 +1,7 @@
 package com.web.ptitexam.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,4 +15,11 @@ public interface ResultRepository extends JpaRepository<Result, String> {
     List<Result> findByExamExamIdAndStudent(String examId, Student student);
 
     Result save(Result result);
+
+    Page<Result> findByStudent(Student student, Pageable pageable);
+
+    Result findByResultId(String resultId);
+
+    // void deleteById(String resultId);
+
 }
