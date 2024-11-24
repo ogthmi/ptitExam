@@ -4,9 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -16,21 +14,18 @@ import com.web.ptitexam.entity.Teacher;
 import com.web.ptitexam.entity.User;
 import com.web.ptitexam.repository.ClassroomRepository;
 import com.web.ptitexam.repository.StudentRepository;
-import com.web.ptitexam.repository.TeacherRepository;
 import com.web.ptitexam.repository.UserRepository;
 import com.web.ptitexam.service.ClassroomService;
 
 @Service
 public class ClassroomServiceImpl implements ClassroomService {
     private final ClassroomRepository classroomRepository;
-    private final TeacherRepository teacherRepository;
     private final UserRepository userRepository;
     private final StudentRepository studentRepository;
 
-    public ClassroomServiceImpl(ClassroomRepository classroomRepository, TeacherRepository teacherRepository,
+    public ClassroomServiceImpl(ClassroomRepository classroomRepository,
             UserRepository userRepository, StudentRepository studentRepository) {
         this.classroomRepository = classroomRepository;
-        this.teacherRepository = teacherRepository;
         this.userRepository = userRepository;
         this.studentRepository = studentRepository;
     }

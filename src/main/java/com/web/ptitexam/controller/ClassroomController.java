@@ -1,21 +1,17 @@
 package com.web.ptitexam.controller;
 
-import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 import com.web.ptitexam.constant.Constant;
 import com.web.ptitexam.dto.ClassroomDTO;
-import com.web.ptitexam.dto.ExamDTO;
-import com.web.ptitexam.dto.QuestionDTO;
+
 import com.web.ptitexam.dto.UserDTO;
 import com.web.ptitexam.entity.Classroom;
 import com.web.ptitexam.entity.Exam;
-import com.web.ptitexam.entity.Question;
+
 import com.web.ptitexam.entity.Result;
 import com.web.ptitexam.entity.Student;
-import com.web.ptitexam.entity.Teacher;
 import com.web.ptitexam.entity.User;
 import com.web.ptitexam.service.ClassroomService;
 import com.web.ptitexam.service.ExamService;
-import com.web.ptitexam.service.QuestionService;
 import com.web.ptitexam.service.ResultService;
 import com.web.ptitexam.service.StudentService;
 import com.web.ptitexam.service.UserService;
@@ -24,19 +20,15 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -390,7 +382,6 @@ public class ClassroomController {
 
     }
 
-  
     @PostMapping(Constant.PAGE_STUDENT_CLASSROOM + "/delete/{id}")
     public String leaveClassroom(@PathVariable("id") String id, HttpServletRequest request,
             RedirectAttributes redirectAttributes) {

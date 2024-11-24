@@ -15,30 +15,19 @@ import com.web.ptitexam.constant.Constant;
 import com.web.ptitexam.dto.UserDTO;
 import com.web.ptitexam.entity.Result;
 import com.web.ptitexam.entity.User;
-import com.web.ptitexam.service.ClassroomService;
-import com.web.ptitexam.service.ExamService;
 import com.web.ptitexam.service.ResultService;
-import com.web.ptitexam.service.StudentService;
 import com.web.ptitexam.service.UserService;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Controller
 public class ResultController {
 
     private final UserService userService;
-    private final ClassroomService classroomService;
-    private final StudentService studentService;
-    private final ExamService examService;
     private final ResultService resultService;
 
-    public ResultController(UserService userService, ClassroomService classroomService,
-            StudentService studentService, ExamService examService, ResultService resultService) {
+    public ResultController(UserService userService, ResultService resultService) {
         this.userService = userService;
-        this.classroomService = classroomService;
-        this.studentService = studentService;
-        this.examService = examService;
         this.resultService = resultService;
     }
 
@@ -48,8 +37,6 @@ public class ResultController {
             @RequestParam(value = "pageSize", defaultValue = "20") int pageSize) {
 
         UserDTO currentUser = userService.getCurrentUser();
-        User user = userService.findByUsername(currentUser.getUsername());
-
         List<Result> results = resultService.findAll();
 
         model.addAttribute("results", results);

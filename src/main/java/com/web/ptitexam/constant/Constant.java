@@ -1,7 +1,5 @@
 package com.web.ptitexam.constant;
 
-import javax.swing.plaf.PanelUI;
-
 public class Constant {
 
     // Gender

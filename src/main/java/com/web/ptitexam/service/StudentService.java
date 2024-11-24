@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import com.web.ptitexam.entity.Classroom;
 import com.web.ptitexam.entity.Student;
-import com.web.ptitexam.entity.Teacher;
 @Service
 public interface StudentService {
     Student findByStudentId(String studentId);

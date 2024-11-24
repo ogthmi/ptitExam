@@ -2,7 +2,6 @@ package com.web.ptitexam.repository;
 
 import com.web.ptitexam.entity.Classroom;
 import com.web.ptitexam.entity.Student;
-import com.web.ptitexam.entity.Teacher;
 import com.web.ptitexam.entity.User;
 
 import org.springframework.data.domain.Page;

@@ -1,11 +1,9 @@
 package com.web.ptitexam.service.implement;
 
-import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
 import com.web.ptitexam.dto.QuestionDTO;
-import com.web.ptitexam.entity.Exam;
 import com.web.ptitexam.entity.Question;
 import com.web.ptitexam.repository.QuestionRepository;
 import com.web.ptitexam.service.QuestionService;

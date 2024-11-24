@@ -11,6 +11,7 @@ public interface ExamRepository
         extends JpaRepository<Exam, String> {
     Exam findByExamId(String examId);
 
+    @SuppressWarnings("unchecked")
     Exam save(Exam exam);
 
 

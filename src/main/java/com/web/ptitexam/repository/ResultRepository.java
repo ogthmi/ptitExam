@@ -14,6 +14,7 @@ public interface ResultRepository extends JpaRepository<Result, String> {
 
     List<Result> findByExamExamIdAndStudent(String examId, Student student);
 
+    @SuppressWarnings("unchecked")
     Result save(Result result);
 
     Page<Result> findByStudent(Student student, Pageable pageable);
