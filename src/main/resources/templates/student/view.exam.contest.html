@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+      integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
+      crossorigin="anonymous"
+    />
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/class-style.css}" />
+    <link rel="icon" th:href="@{/image/login/PTIT_LOGO.png}" />
+
+    <title>Vào thi</title>
+  </head>
+
+  <body>
+    <nav>
+      <div class="nav_function">
+        <img th:src="@{/image/homepage/PTIT_LOGO_WHITE.png}" alt="PTIT Logo" />
+        <div>
+          <a th:href="@{/student/classroom}">Lớp học</a>
+          
+        </div>
+      </div>
+      <div class="nav_user_info">
+        <div id="nav_username">
+          <h4 th:text="${userDTO.lastname} + ' ' + ${userDTO.firstname}">
+            Tên người dùng
+          </h4>
+          <h5
+            th:text="${userDTO.role == 'TEACHER' ? 'Giáo viên' :
+         (userDTO.role == 'STUDENT' ? 'Sinh viên' :
+         (userDTO.role == 'STUDENT' ? 'Quản trị viên' : 'null'
+      ))}"
+          >
+            Vai trò
+          </h5>
+        </div>
+        <div id="user_more_tools">
+          ▼
+          <ul class="user-menu">
+            <li><a href="#">Hồ sơ</a></li>
+            <li><a href="#">Hướng dẫn</a></li>
+            <li>
+              <form th:action="@{/logout}" method="post" id="logout_button">
+                <button type="submit">Đăng xuất</button>
+              </form>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <h3
+        class="mt-5"
+        th:text="${userDTO.lastname} + ' ' + ${userDTO.firstname}"
+      ></h3>
+      <div class="mt-1 mb-5 border rounded">
+        <form
+          th:action="@{'/student/exam/' + ${examId} +'/confirm'}"
+          method="post"
+          th:object="${answerDTO}"
+        >
+          <input
+            type="text"
+            th:field="*{questionCount}"
+            th:value="1"
+            hidden
+          />
+          <div
+            class="p-2 px-3 pb-3 questionContent"
+            th:each=" question , iterStat: ${questionContent}"
+          >
+            <div class="question">
+              <span
+                class="font-weight-bold"
+                th:text="'Câu ' + ${iterStat.index + 1} + ':'"
+              ></span>
+              <p
+                th:text="${questionContent[__${iterStat.index}__].questionContent}"
+              ></p>
+            </div>
+
+            <div class="answers">
+              <input
+                type="radio"
+                th:field="*{userAnswers[__${iterStat.index}__]}"
+                id="answerA"
+                name="userAns"
+                th:value="A"
+                required
+              />
+              <label
+                for="answerA"
+                th:text="${questionContent[__${iterStat.index}__].answersA}"
+              ></label
+              ><br />
+              <input
+                type="radio"
+                th:field="*{userAnswers[__${iterStat.index}__]}"
+                id="answerB"
+                name="userAns"
+                th:value="B"
+              />
+              <label
+                for="answerB"
+                th:text="${questionContent[__${iterStat.index}__].answersB}"
+              ></label
+              ><br />
+              <input
+                type="radio"
+                th:field="*{userAnswers[__${iterStat.index}__]}"
+                id="answerC"
+                name="userAns"
+                th:value="C"
+              />
+              <label
+                for="answerC"
+                th:text="${questionContent[__${iterStat.index}__].answersC}"
+              ></label>
+              <br />
+              <input
+                type="radio"
+                th:field="*{userAnswers[__${iterStat.index}__]}"
+                id="answerD"
+                name="userAns"
+                th:value="D"
+              />
+              <label
+                for="answerD"
+                th:text="${questionContent[__${iterStat.index}__].answersD}"
+              ></label>
+            </div>
+            <hr />
+          </div>
+          <input
+            type="submit"
+            class="mx-3 mb-5 btn btn-danger mb-3"
+            value="Nộp bài"
+          />
+        </form>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const moreTools = document.getElementById("user_more_tools");
+      const userMenu = moreTools.querySelector(".user-menu");
+
+      // Toggle menu khi bấm vào biểu tượng tam giác
+      moreTools.addEventListener("click", (event) => {
+        event.stopPropagation(); // Ngăn không để sự kiện bấm vào phần tử cha
+        userMenu.classList.toggle("show");
+      });
+
+      // Đóng menu khi bấm ra ngoài
+      document.addEventListener("click", (event) => {
+        if (!moreTools.contains(event.target)) {
+          // Kiểm tra nếu không bấm vào trong menu
+          userMenu.classList.remove("show"); // Xóa lớp 'show' để ẩn menu
+        }
+      });
+    });
+  </script>
+</html>

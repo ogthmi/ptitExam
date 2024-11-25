@@ -3,12 +3,10 @@ package com.web.ptitexam.controller;
 import com.web.ptitexam.constant.Constant;
 import com.web.ptitexam.dto.UserDTO;
 import com.web.ptitexam.service.UserService;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import javax.swing.plaf.PanelUI;
 
 @Controller
 public class ProfileController {

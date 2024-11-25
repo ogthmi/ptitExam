@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.web.ptitexam.dto.StudentDTO;
 import com.web.ptitexam.dto.UserDTO;
-import com.web.ptitexam.entity.Student;
 import com.web.ptitexam.entity.User;
 
 public interface UserService {

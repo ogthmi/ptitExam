@@ -19,8 +19,9 @@
       <div class="nav_function">
         <img th:src="@{/image/homepage/PTIT_LOGO_WHITE.png}" alt="PTIT Logo" />
         <div>
-          <a th:href="@{/teacher/classroom}">Lớp học</a>
-          <a th:href="@{/teacher/history}">Lịch sử</a>
+          <a th:href="@{/student/classroom}">Lớp học</a>
+          <a th:href="@{/student/history}">Lịch sử</a>
+
 
         </div>
       </div>
@@ -55,8 +56,7 @@
     <div class="content">
       <div class="message">
         <h2>
-          Lớp học
-          <span class="text-danger" th:text="'(' + ${totalItems} + ')'"></span>
+          Lịch sử làm bài
         </h2>
         <div th:if="${success}" id="success-message">
           <p th:text="${success}"></p>
@@ -87,100 +87,42 @@
           });
         </script>
 
-        <div class="search_tool">
-          <input
-            type="text"
-            name="classroom"
-            id="search_input"
-            th:value="${search}"
-            placeholder="Tìm kiếm lớp theo tên"
-          />
-          <a hidden id="red_button" class="search-student">Tìm kiếm</a>
-
-          <select id="sort_criteria">
-            <option value="default" th:selected="${sort == 'default'}">
-              Sắp xếp
-            </option>
-            <option value="az" th:selected="${sort == 'az'}">A - Z</option>
-            <option value="za" th:selected="${sort == 'za'}">Z - A</option>
-            <option value="newest" th:selected="${sort == 'newest'}">
-              Mới nhất
-            </option>
-            <option value="oldest" th:selected="${sort == 'oldest'}">
-              Cũ nhất
-            </option>
-          </select>
-          <div class="add-class-wrapper">
-            <a
-              data-toggle="modal"
-              data-target="#create-classroom"
-              id="red_button"
-              class="add-classroom"
-              >+ Tạo lớp mới</a
-            >
-          </div>
-          <a id="red_button" hidden class="sort-student">Áp dụng</a>
-        </div>
-      </div>
       <div class="info-table">
         <table>
           <thead>
             <tr>
               <th>STT</th>
-              <th>Mã lớp</th>
-              <th>Tên lớp</th>
-              <th>Ngày tạo</th>
-              <th>Giờ tạo</th>
-              <th>Số học sinh</th>
-              <th>Số đề thi</th>
-              <th>Thao tác</th>
+              <th>Mã SV</th>
+              <th>Tên SV</th>
+              <th>Tên đề thi</th>
+              <th>Ngày Nộp bài</th>
+              <th>Số câu đúng</th>
+              <th>Số điểm</th>
             </tr>
           </thead>
           <tbody>
-            <tr th:each="classroom, iterStat : ${classrooms}">
+            <tr th:style="${result.score} > 0 ? 'background-color: #86c681' : 'background-color: #fca1a0'" th:each="result, iterStat : ${results}">
               <td th:text="${iterStat.count}"></td>
               <td>
                 <a
-                  th:href="@{'/teacher/classroom/update/' + ${classroom.classId}}"
-                  th:text="${classroom.classId}"
+                  th:text="${result.student.studentId}"
                 >
                 </a>
               </td>
-              <td th:text="${classroom.className}"></td>
-              <td
-                th:text="${#dates.format(classroom.classCreatedAt, 'dd/MM/yyyy')}"
-              ></td>
-              <td
-                th:text="${#dates.format(classroom.classCreatedAt, 'HH:mm:ss')}"
-              ></td>
-              <td th:text="${classroom.students.size()}"></td>
-              <td>0</td>
-              <td>
-                <form
-                  th:action="@{'/teacher/classroom/delete/' + ${classroom.classId}}"
-                  method="post"
-                  class="delete-form"
-                >
-                  <button
-                    type="button"
-                    th:attr="data-id=${classroom.classId}"
-                    class="btn btn-danger delete-btn"
-                    data-toggle="modal"
-                    data-target="#delete-classroom"
-                  >
-                    Xóa
-                  </button>
-                </form>
-              </td>
+              <td th:text="${result.student.user.firstname} + ' ' +  ${result.student.user.lastname}"></td>
+              <td th:text="${result.exam.examTitle}"></td>
+
+              <td th:text="${{result.resultCreatedAt}}"></td>
+              <td th:text="${result.correctAnswerCount} + '/' +  ${result.exam.questions.size()}"  ></td>
+              <td th:text="${result.score} % 1 == 0? ${result.score} :${#numbers.formatDecimal(result.score, 0, 2)}"></td>
             </tr>
           </tbody>
         </table>
 
         <p th:if="${totalItems == 0}" class="text-center mt-4 text-danger">
-          Hiện tại không có lớp học nào!
+          Hiện tại bạn chưa làm đề thi nào cả, quá lười!
         </p>
-
-        <div
+<div
           class="mt-4 d-flex justify-content-center"
           aria-label="Page navigation example"
           th:if="${totalItems >= 1}"
@@ -193,7 +135,7 @@
             >
               <a
                 class="page-link"
-                th:href="@{/teacher/classroom(current=${currentPage - 1}, pageSize=${pageSize})}"
+                th:href="@{/student/history(current=${currentPage - 1}, pageSize=${pageSize})}"
                 aria-label="Previous"
               >
                 <span aria-hidden="true">&laquo;</span>
@@ -208,7 +150,7 @@
             >
               <a
                 class="page-link"
-                th:href="@{/teacher/classroom(current=${i}, pageSize=${pageSize})}"
+                th:href="@{/student/history(current=${i}, pageSize=${pageSize})}"
                 th:text="${i}"
               ></a>
             </li>
@@ -220,7 +162,7 @@
             >
               <a
                 class="page-link"
-                th:href="@{/teacher/classroom(current=${currentPage + 1}, pageSize=${pageSize})}"
+                th:href="@{/student/history(current=${currentPage + 1}, pageSize=${pageSize})}"
                 aria-label="Next"
               >
                 <span aria-hidden="true">&raquo;</span>
@@ -228,57 +170,12 @@
             </li>
           </ul>
         </div>
+        
       </div>
     </div>
 
     <!-- Modal -->
-    <div
-      class="modal fade"
-      id="create-classroom"
-      data-backdrop="static"
-      data-keyboard="false"
-      tabindex="-1"
-      aria-labelledby="staticBackdropLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="staticBackdropLabel">
-              Tạo mới lớp học
-            </h5>
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form th:action="@{/teacher/classroom/create}" method="post">
-              <div class="form-group">
-                <label for="exampleInputEmail1">Tên lớp học</label>
-                <input type="text" class="form-control" name="name" required />
-              </div>
-              <div class="modal-footer">
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  data-dismiss="modal"
-                >
-                  Đóng
-                </button>
-                <button type="submit" class="btn btn-danger">
-                  Tạo mới lớp
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
+   
 
     <div
       class="modal fade"
@@ -316,7 +213,6 @@
         </div>
       </div>
     </div>
-    
 
     <script
       src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"

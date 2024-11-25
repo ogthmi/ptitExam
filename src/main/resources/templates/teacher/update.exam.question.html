@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+      integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
+      crossorigin="anonymous"
+    />
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/class-style.css}" />
+    <link rel="icon" th:href="@{/image/login/PTIT_LOGO.png}" />
+
+    <title>Cập nhật lớp học</title>
+  </head>
+
+  <body>
+    <nav>
+      <div class="nav_function">
+        <img th:src="@{/image/homepage/PTIT_LOGO_WHITE.png}" alt="PTIT Logo" />
+        <div>
+          <a th:href="@{/teacher/classroom}">Lớp học</a>
+          <a th:href="@{/teacher/history}">Lịch sử</a>
+        </div>
+      </div>
+      <div class="nav_user_info">
+        <div id="nav_username">
+          <h4 th:text="${userDTO.lastname} + ' ' + ${userDTO.firstname}">
+            Tên người dùng
+          </h4>
+          <h5
+            th:text="${userDTO.role == 'TEACHER' ? 'Giáo viên' :
+               (userDTO.role == 'STUDENT' ? 'Sinh viên' :
+               (userDTO.role == 'STUDENT' ? 'Quản trị viên' : 'null'
+            ))}"
+          >
+            Vai trò
+          </h5>
+        </div>
+        <div id="user_more_tools">
+          ▼
+          <ul class="user-menu">
+            <li><a th:href="@{/user-info}">Hồ sơ</a></li>
+            <li><a href="#">Hướng dẫn</a></li>
+            <li>
+              <form th:action="@{/logout}" method="post" id="logout_button">
+                <button type="submit">Đăng xuất</button>
+              </form>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container">
+      <div class="mt-4">
+        <h2 class="text-left title-create">
+          Danh sách câu hỏi của đề thi
+          <span th:text="${examTitle}"></span>
+        </h2>
+        <hr />
+        <div class=".d-flex">
+          <form
+            th:action="@{'/teacher/classroom/' + ${classroom.classId} + '/exam/create/question'}"
+            method="post"
+            th:object="${questionDTO}"
+          >
+            <div
+              class="mb-3"
+              th:each="content, iterStat : ${questionDTO.questionContent}"
+            >
+              <label for="">Câu hỏi</label>
+              <textarea
+                required
+                class="form-control"
+                rows="5"
+                th:field="*{questionContent[__${iterStat.index}__]}"
+              ></textarea>
+              <div class="form-inline">
+                <label for="answersA" class="m-2">Đáp án A: </label>
+                <input
+                  required
+                  th:field="*{answerA[__${iterStat.index}__]}"
+                  type="text"
+                  class="form-control m-2"
+                  id="answersA"
+                />
+                <input
+                  class="form-check-input m-2"
+                  type="radio"
+                  th:field="*{correctAnswers[__${iterStat.index}__]}"
+                  th:value="A"
+                  name="flexRadioDefault"
+                  id="answersA"
+                  checked
+                />
+              </div>
+              <div class="form-inline">
+                <label for="answersB" class="m-2">Đáp án B: </label>
+                <input
+                  required
+                  th:field="*{answerB[__${iterStat.index}__]}"
+                  type="text"
+                  class="form-control m-2"
+                  id="answersA"
+                />
+                <input
+                  class="form-check-input m-2"
+                  type="radio"
+                  th:field="*{correctAnswers[__${iterStat.index}__]}"
+                  th:value="B"
+                  name="flexRadioDefault"
+                  id="answersB"
+                />
+              </div>
+              <div class="form-inline">
+                <label for="answersC" class="m-2">Đáp án C: </label>
+                <input
+                  required
+                  th:field="*{answerC[__${iterStat.index}__]}"
+                  type="text"
+                  class="form-control m-2"
+                  id="answersA"
+                />
+                <input
+                  class="form-check-input m-2"
+                  type="radio"
+                  th:field="*{correctAnswers[__${iterStat.index}__]}"
+                  th:value="C"
+                  name="flexRadioDefault"
+                  id="answersC"
+                />
+              </div>
+              <div class="form-inline">
+                <label for="answersD" class="m-2">Đáp án D: </label>
+                <input
+                  required
+                  th:field="*{answerD[__${iterStat.index}__]}"
+                  type="text"
+                  class="form-control m-2"
+                  id="answersA"
+                />
+                <input
+                  class="form-check-input m-2"
+                  type="radio"
+                  th:field="*{correctAnswers[__${iterStat.index}__]}"
+                  th:value="D"
+                  name="flexRadioDefault"
+                  id="answersD"
+                />
+              </div>
+              <hr />
+            </div>
+
+            <input
+              readonly
+              th:field="*{questionCount}"
+              type="text"
+              class="invisible form-control m-2"
+              id=""
+              value="-1"
+            />
+            <input type="submit" class="btn btn-danger mb-3" value="Tạo đề thi" />
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const moreTools = document.getElementById("user_more_tools");
+      const userMenu = moreTools.querySelector(".user-menu");
+
+      // Toggle menu khi bấm vào biểu tượng tam giác
+      moreTools.addEventListener("click", (event) => {
+        event.stopPropagation(); // Ngăn không để sự kiện bấm vào phần tử cha
+        userMenu.classList.toggle("show");
+      });
+
+      // Đóng menu khi bấm ra ngoài
+      document.addEventListener("click", (event) => {
+        if (!moreTools.contains(event.target)) {
+          // Kiểm tra nếu không bấm vào trong menu
+          userMenu.classList.remove("show"); // Xóa lớp 'show' để ẩn menu
+        }
+      });
+    });
+  </script>
+</html>

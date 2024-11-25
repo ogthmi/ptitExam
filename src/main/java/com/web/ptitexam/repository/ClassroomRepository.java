@@ -10,6 +10,7 @@ import com.web.ptitexam.entity.Classroom;
 import com.web.ptitexam.entity.Teacher;
 
 public interface ClassroomRepository extends JpaRepository<Classroom, String> {
+    @SuppressWarnings("unchecked")
     Classroom save(Classroom classroom);
 
     List<Classroom> findAll();

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+      integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
+      crossorigin="anonymous"
+    />
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/class-style.css}" />
+    <link rel="icon" th:href="@{/image/login/PTIT_LOGO.png}" />
+
+    <title>Cập nhật lớp học</title>
+  </head>
+
+  <body>
+    <nav>
+      <div class="nav_function">
+        <img th:src="@{/image/homepage/PTIT_LOGO_WHITE.png}" alt="PTIT Logo" />
+        <div>
+          <a th:href="@{/teacher/classroom}">Lớp học</a>
+          <a th:href="@{/teacher/history}">Lịch sử</a>
+
+        </div>
+      </div>
+      <div class="nav_user_info">
+        <div id="nav_username">
+          <h4 th:text="${userDTO.lastname} + ' ' + ${userDTO.firstname}">
+            Tên người dùng
+          </h4>
+          <h5
+            th:text="${userDTO.role == 'TEACHER' ? 'Giáo viên' :
+               (userDTO.role == 'STUDENT' ? 'Sinh viên' :
+               (userDTO.role == 'STUDENT' ? 'Quản trị viên' : 'null'
+            ))}"
+          >
+            Vai trò
+          </h5>
+        </div>
+        <div id="user_more_tools">
+          ▼
+          <ul class="user-menu">
+            <li><a th:href="@{/user-info}">Hồ sơ</a></li>
+            <li><a href="#">Hướng dẫn</a></li>
+            <li>
+              <form th:action="@{/logout}" method="post" id="logout_button">
+                <button type="submit">Đăng xuất</button>
+              </form>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container">
+      <div class="mt-4">
+        <h2 class="text-left title-create">
+          Tạo Đề thi Lớp
+          <span th:text="${classroom.className}"></span>
+        </h2>
+      
+          
+        <div class=".d-flex">
+          <form
+            th:action="@{'/teacher/classroom/' + ${classroom.classId} + '/exam/create/question'}"
+            method="get"
+            th:object="${examForm}"
+          >
+            <div class="form-group">
+              <label class="h5" for="examTitle">Tên đề thi:</label>
+              <input class="form-control" type="text" th:field="*{examTitle}" />
+            </div>
+            <div class="form-group mb-1">
+              <label class="h5" for="examDuration">Thời gian:</label>
+              <input
+                class="form-control"
+                type="text"
+                th:field="*{examDuration}"
+              />
+            </div>
+
+            <div class="form-group mb-1">
+              <label class="h5" for="examDuration">Số lượng câu hỏi:</label>
+              <input
+                class="form-control"
+                type="text"
+                th:field="*{questionCount}"
+              />
+            </div>
+            <hr />
+            <div id="question_form" class="mb-3"></div>
+            </button>
+            <input
+              type="submit"
+              class="btn btn-danger mb-3"
+              value="Tiếp tục"
+            />
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const moreTools = document.getElementById("user_more_tools");
+      const userMenu = moreTools.querySelector(".user-menu");
+
+      // Toggle menu khi bấm vào biểu tượng tam giác
+      moreTools.addEventListener("click", (event) => {
+        event.stopPropagation(); // Ngăn không để sự kiện bấm vào phần tử cha
+        userMenu.classList.toggle("show");
+      });
+
+      // Đóng menu khi bấm ra ngoài
+      document.addEventListener("click", (event) => {
+        if (!moreTools.contains(event.target)) {
+          // Kiểm tra nếu không bấm vào trong menu
+          userMenu.classList.remove("show"); // Xóa lớp 'show' để ẩn menu
+        }
+      });
+    });
+  </script>
+</html>

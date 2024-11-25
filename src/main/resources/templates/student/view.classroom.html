@@ -28,8 +28,8 @@
         <img th:src="@{/image/homepage/PTIT_LOGO_WHITE.png}" alt="PTIT Logo" />
         <div>
           <a th:href="@{/student/classroom}">Lớp học</a>
-          <a>Đề thi</a>
-          <a>Ôn tập</a>
+          <a th:href="@{/student/history}">Lịch sử</a>
+
         </div>
       </div>
       <div class="nav_user_info">
@@ -62,7 +62,7 @@
     </nav>
     
     <div class="container">
-      <div class="mt-4">
+      <div class="mt-4 mb-5">
         <h2 class="text-center title-create">
           Danh sách Sinh Viên Lớp
           <span th:text="${classroom.className}"></span> 
@@ -149,7 +149,7 @@
                   >
                   </a>
                 </td>
-                <td th:text="${student.user.firstname} + ${student.user.lastname}"></td>
+                <td th:text="${student.user.firstname} + ' ' + ${student.user.lastname}"></td>
                 <td th:text="${student.major}"></td>
                 <td th:text="${student.className}"></td>
               </tr>
@@ -160,7 +160,7 @@
             Không có sinh viên nào trong lớp
 
           <div
-          class="mt-4 d-flex justify-content-center"
+          class="mt-6 d-flex justify-content-center"
           th:if="${totalItems >= 1}"
           aria-label="Page navigation example"
         >
@@ -192,7 +192,151 @@
           </ul>
         </div>
         </div>
+
       </div>
+
+       <!--TODO: Exam Page-->
+       <div class="mt-4">
+        <h2 class="text-center title-create">
+          Danh sách đề thi lớp
+          <span th:text="${classroom.className}"></span> 
+          <span class="text-danger" th:text="'(' + ${examTotalItems} + ')'"></span>
+        </h2>
+
+        <div class="mt-5">
+          <div class="message">
+            <div th:if="${success}" id="success-message">
+              <p th:text="${success}"></p>
+            </div>
+    
+            <div th:if="${error}" id="error-message">
+              <p th:text="${error}"></p>
+            </div>
+            <script>
+              // Kiểm tra nếu phần tử success-message tồn tại trên trang
+              window.addEventListener("load", function () {
+                var successMessage = document.getElementById("success-message");
+                if (successMessage) {
+                  // Ẩn thông báo sau 5 giây
+                  setTimeout(function () {
+                    successMessage.style.display = "none";
+                  }, 5000);
+                }
+    
+                var errorMessage = document.getElementById("error-message");
+    
+                if (errorMessage) {
+                  // Ẩn thông báo sau 5 giây
+                  setTimeout(function () {
+                    errorMessage.style.display = "none";
+                  }, 5000);
+                }
+              });
+            </script>
+          </div>
+    
+          <div class="search_tool">
+            
+            <input
+                type="text"
+                name="exam"
+                id="search_input"
+                placeholder="Tìm kiếm theo mã đề thi"
+                th:value="${search}"
+
+            />
+            <a id="red_button" hidden class="search-student">Tìm kiếm</a>
+
+            <select id="sort_order">
+              <option value="default" th:selected="${sort == 'default'}">Sắp xếp</option>
+              <option value="az" th:selected="${sort == 'az'}">A-Z</option>
+              <option value="za" th:selected="${sort == 'za'}">Z-A</option>
+            </select>
+        
+            <select style="margin: 0 10px" id="sort_criteria">
+                <option value="default" th:selected="${key == 'default'}">Tiêu chí</option>
+                <option value="examTitle" th:selected="${key == 'examTitle'}">Tên đề thi</option>
+                <option value="examQuestionCount" th:selected="${key == 'examQuestionCount'}">Số lượng câu</option>
+                <option value="examDuration" th:selected="${key == 'examDuration'}">Thời gian</option>
+            </select>
+            <a id="red_button" class="sort-student">Sắp xếp</a>
+          </div>
+
+        <div class="info-table">
+          <table>
+            <thead>
+              <tr>
+                <th>STT</th>
+                <th>Tên đề thi</th>
+                <th>Thời gian tạo</th>
+                <th>Số lượng câu</th>
+                <th>Thời gian</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody  >
+              <tr th:style="${resultId.contains(exam.examId)} ? 'background-color: #86c681' : ''" th:each="exam, iterStat : ${exams}" >
+                  <td  th:text="${iterStat.count}"></td>
+                <td th:text="${exam.examTitle}"></td>
+                <td th:text="${{exam.examCreatedAt}}"></td>
+
+                <td th:text="${exam.questions.size()}"></td>
+                <td th:text="${exam.examDuration}"></td>
+                <td>
+                  <div th:if="${resultId.contains(exam.examId)}">
+                    Đã làm
+                  </div>
+                  <div th:unless="${resultId.contains(exam.examId)}">
+                    <a
+                  th:href="@{'/student/exam/' + ${exam.examId} +'/prepare'}"
+                    class="btn btn-danger"
+                    >Vào thi</a
+                  >
+                  </div>
+                  
+                </td>
+                
+                
+              </tr>
+            </tbody>
+          </table>
+
+          <p th:if="${examTotalItems == 0}" class="text-center mt-4 text-danger">
+            Không có đề thi nào cả
+
+          <div
+          class="mt-4 d-flex justify-content-center"
+          th:if="${examTotalItems >= 1}"
+          aria-label="Page navigation example"
+        >
+            <ul class="pagination">
+              <!-- Previous Button -->
+              <li class="page-item" th:classappend="${examCurrentPage == 1} ? 'disabled'">
+                  <a class="page-link"
+                    th:href="@{/student/classroom/view/{id}(id=${classroom.classId}, examCurrent=${examCurrentPage - 1}, pageSize=${pageSize})}"
+                    aria-label="Previous">
+                      <span aria-hidden="true">&laquo;</span>
+                  </a>
+              </li>
+          
+              <!-- Page Numbers -->
+              <li th:each="i : ${#numbers.sequence(1, examTotalPages)}" class="page-item" th:classappend="${i == examCurrentPage} ? 'active'">
+                  <a class="page-link"
+                    th:href="@{/student/classroom/view/{id}(id=${classroom.classId}, examCurrent=${i}, pageSize=${pageSize})}"
+                    th:text="${i}"></a>
+              </li>
+          
+              <!-- Next Button -->
+              <li class="page-item" th:classappend="${examCurrentPage == examTotalPages} ? 'disabled'">
+                  <a class="page-link"
+                    th:href="@{/student/classroom/view/{id}(id=${classroom.classId}, examCurrent=${examCurrentPage + 1}, pageSize=${pageSize})}"
+                    aria-label="Next">
+                      <span aria-hidden="true">&raquo;</span>
+                  </a>
+              </li>
+          </ul>
+        </div>
+        </div>
     </div>
   </body>
 

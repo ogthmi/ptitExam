@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+      integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
+      crossorigin="anonymous"
+    />
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/class-style.css}" />
+    <link rel="icon" th:href="@{/image/login/PTIT_LOGO.png}" />
+
+    <title>Vào thi</title>
+  </head>
+
+  <body>
+    <nav>
+      <div class="nav_function">
+        <img th:src="@{/image/homepage/PTIT_LOGO_WHITE.png}" alt="PTIT Logo" />
+        <div>
+          <a th:href="@{/student/classroom}">Lớp học</a>
+        </div>
+      </div>
+      <div class="nav_user_info">
+        <div id="nav_username">
+          <h4 th:text="${userDTO.lastname} + ' ' + ${userDTO.firstname}">
+            Tên người dùng
+          </h4>
+          <h5
+            th:text="${userDTO.role == 'TEACHER' ? 'Giáo viên' :
+         (userDTO.role == 'STUDENT' ? 'Sinh viên' :
+         (userDTO.role == 'STUDENT' ? 'Quản trị viên' : 'null'
+      ))}"
+          >
+            Vai trò
+          </h5>
+        </div>
+        <div id="user_more_tools">
+          ▼
+          <ul class="user-menu">
+            <li><a href="#">Hồ sơ</a></li>
+            <li><a href="#">Hướng dẫn</a></li>
+            <li>
+              <form th:action="@{/logout}" method="post" id="logout_button">
+                <button type="submit">Đăng xuất</button>
+              </form>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="mt-5 mx-4 border rounded">
+        <div class="p-3 contest">
+          <div class="h5 contest__nav">
+            <p>Thực hành</p>
+          </div>
+          <table class="contest__table">
+            <thead>
+              <tr class="contest__table__head">
+                <th>Tên đề thi</th>
+                <th>Số câu hỏi</th>
+                <th>Thời gian</th>
+                <th class="text--middle">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td th:text="${exam.examTitle}"></td>
+                <td th:text="${exam.questionCount} + ' câu'"></td>
+                <td th:text="${exam.examDuration} + ' phút'"></td>
+                <td class="text--middle">
+                  <a
+                    th:href="@{'/student/exam/' + ${exam.examId} +'/contest'}"
+                    class="btn btn-danger"
+                    >Vào thi</a
+                  >
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <hr />
+          <div class="setting__main__guide__content">
+            <p class="font-weight-bold">LƯU Ý:</p>
+            • Đây là thi trắc nghiệm, không phải là codeptit, nên là đừng dại mà tạo thêm bất cứ file nào<br />
+            • Thoát tất cả các phần mềm không hợp lệ như Trình duyệt, Zalo,
+            Facebook, Messenger, Discord, ... ở cả chế độ chạy ngầm.<br />
+            • Quá trình thi sẽ được ghi hình toàn bộ để hậu kiểm. Không tự ý
+            khởi động lại thiết bị khi chưa được sự đồng ý của giám thị<br />
+            <p class="font-weight-bold">CÁC TRƯỜNG HỢP VI PHẠM QUY CHẾ:</p>
+            • Đóng phần mềm thi trong thời gian làm bài không rõ lý do.<br />
+            • Đăng nhập một tài khoản trên 2 máy tính khác nhau hoặc Đăng nhập 2
+            tài khoản từ cùng 1 máy.<br />
+            • Cài đặt thêm bất cứ phần mềm, tiện ích nào mà chưa được sự đồng ý
+            của giám thị.<br />
+            • Kết nối thiết bị cắm ngoài (như USB, thẻ nhớ, điện thoại …).<br />
+            • Mở trình duyệt web, ứng dụng nhắn tin vì bất cứ lý do gì.<br />
+            • Di chuyển ra khỏi chỗ ngồi của mình không xin phép.<br />
+            • Trao đổi với người khác trong lúc làm bài.<br />
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const moreTools = document.getElementById("user_more_tools");
+      const userMenu = moreTools.querySelector(".user-menu");
+
+      // Toggle menu khi bấm vào biểu tượng tam giác
+      moreTools.addEventListener("click", (event) => {
+        event.stopPropagation(); // Ngăn không để sự kiện bấm vào phần tử cha
+        userMenu.classList.toggle("show");
+      });
+
+      // Đóng menu khi bấm ra ngoài
+      document.addEventListener("click", (event) => {
+        if (!moreTools.contains(event.target)) {
+          // Kiểm tra nếu không bấm vào trong menu
+          userMenu.classList.remove("show"); // Xóa lớp 'show' để ẩn menu
+        }
+      });
+
+      // Sắp xếp sinh viên
+
+      const sortButton = document.querySelector(".sort-student");
+      const sortOrderSelect = document.getElementById("sort_order");
+      const sortCriteriaSelect = document.getElementById("sort_criteria");
+
+      sortButton.addEventListener("click", function () {
+        const sortOrder = sortOrderSelect.value;
+        const sortCriteria = sortCriteriaSelect.value;
+
+        let queryParams = new URLSearchParams(window.location.search);
+
+        if (sortOrder !== "default" && sortCriteria !== "default") {
+          queryParams.set("sort", sortOrder);
+          queryParams.set("key", sortCriteria);
+        } else {
+          queryParams.delete("sort");
+          queryParams.delete("key");
+        }
+
+        window.location.search = queryParams.toString();
+      });
+
+      // Tìm kiếm lớp sinh viên
+
+      const searchButton = document.querySelector(".search-student");
+      const searchInput = document.getElementById("search_input");
+
+      searchButton.addEventListener("click", function () {
+        const searchInput = document.getElementById("search_input");
+        const searchValue = searchInput.value;
+
+        let queryParams = new URLSearchParams(window.location.search);
+
+        queryParams.delete("current");
+        queryParams.delete("pageSize");
+        if (searchValue) {
+          queryParams.set("search", searchValue);
+        } else {
+          queryParams.delete("search");
+        }
+
+        window.location.search = queryParams.toString();
+      });
+
+      searchInput.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+          searchButton.click();
+        }
+      });
+    });
+  </script>
+</html>
